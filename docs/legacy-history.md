@@ -1,6 +1,6 @@
 # PageAgo：旧版历史记录工具
 
-这份文档保留基于 Edge 历史访问点的导出与复盘流程。当前浏览器前台活动时间轴、扩展安装与离线演示请看[项目首页](../README.zh-CN.md)。这两类数据含义不同，旧版访问跨度不能作为前台活动时长。
+这份文档保留基于 Edge 历史访问点的导出与复盘流程。当前浏览器前台活动时间轴、扩展安装与离线演示请看[项目首页](../README.md)。这两类数据含义不同，旧版访问跨度不能作为前台活动时长。
 
 读取 Edge 每次访问，生成可搜索的离线甘特图。Python 标准库负责只读采集，Codex Skill 负责主题分析；HTML 可独立打开。
 
@@ -115,7 +115,7 @@ python skills/edge-learning-review/scripts/learning_review.py run --input output
 `skills/edge-learning-review/SKILL.md` 和 `references/data-contract.md`。
 
 历史记录阶段仅统计访问事件与页面数，活动时长和学习时长均为未知。
-此历史导出与学习复盘流程按需执行。当前浏览器前台活动记录请使用[主项目扩展](../README.zh-CN.md#开始使用)；历史访问点与前台活动区间不互相替代。
+此历史导出与学习复盘流程按需执行。当前浏览器前台活动记录请使用[主项目扩展](../README.md#安装指南)；历史访问点与前台活动区间不互相替代。
 
 ```powershell
 python -m unittest -v test_edge_history_today test_learning_review
