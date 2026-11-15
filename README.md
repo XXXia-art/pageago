@@ -5,63 +5,50 @@
   </picture>
 </p>
 
-<p align="center">A local-first timeline of the pages you use in Edge and Chrome.</p>
+<p align="center">Find the pages you visited, and when.</p>
 
 <p align="center">
-  <img src="docs/media/badges/local-first.svg" alt="Local first">
-  <img src="docs/media/badges/desktop-browsers.svg" alt="Desktop · Edge / Chrome">
-  <img src="docs/media/badges/offline-demo.svg" alt="Offline demo">
+  <a href="#installation">Installation</a>
+  &nbsp; · &nbsp; <a href="README.zh-CN.md">简体中文</a>
 </p>
 
-<p align="center">
-  English · <a href="README.zh-CN.md">简体中文</a>
-  &nbsp; · &nbsp; <a href="#get-started">Get started</a>
-  &nbsp; · &nbsp; <a href="#your-data-stays-on-your-device">Privacy</a>
-</p>
+![PageAgo timeline: zooming, panning, resetting, searching and changing dates. All activity is synthetic.](docs/media/pageago-interactions.gif)
 
-![PageAgo's warm ivory desktop interface, with website labels above a full-day activity timeline and a daylight scene below. All activity is synthetic.](docs/media/pageago-overview.png)
+## Installation
 
-PageAgo records estimated foreground browser activity and puts it on one daily timeline. Revisit a page, find a time, or look through the day without an account or server. The interface currently uses Simplified Chinese.
+Supports **desktop Edge / Chrome 120+**, primarily tested on Windows. The interface is currently in Simplified Chinese.
 
-## Get started
-
-Download or clone this repository:
-
-```sh
-git clone https://github.com/XXXia-art/pageago.git
-cd pageago
-```
-
-### Try the offline demo
-
-Open [`prototypes/trace-next/dist/index.html`](prototypes/trace-next/dist/index.html) from your downloaded copy. On Windows, double-click `Open-PageAgo.cmd` in the repository root. No installation, server, Python, or Node.js is needed to use the prebuilt demo.
-
-The demo supports dates, zoom, page details, search, and JSON import/export. It cannot record other browser tabs; recording requires the extension below.
-
-### Record your own activity
-
-Use **Edge or Chrome 120+ on desktop**. The current interface is designed and tested primarily for Windows PCs.
+Download the [project ZIP](https://github.com/XXXia-art/pageago/archive/refs/heads/main.zip) and extract it.
 
 1. Open `edge://extensions` or `chrome://extensions` and enable **Developer mode**.
 2. Select **Load unpacked** and choose [`prototypes/trace-next/extension`](prototypes/trace-next/extension).
 3. Pin PageAgo to the toolbar and click its icon to open the local timeline.
 4. Open the date menu → **设置** (Settings) → **开始记录** (Start recording).
 
-**Recording is off after installation.** Start/pause is your choice and persists across browser restarts. The same settings panel contains sound, import, export, and clear controls. Clearing requires confirmation and pauses recording.
+**Recording is off after installation.** Start or pause it in Settings; the choice persists across browser restarts.
+
+### Offline preview
+
+Open [`prototypes/trace-next/dist/index.html`](prototypes/trace-next/dist/index.html), or double-click `Open-PageAgo.cmd` on Windows. The preview uses synthetic data; recording requires the extension.
 
 ## Your data stays on your device
 
-PageAgo stores recordings in the browser's local extension storage. It has no account, analytics, cloud sync, or remote backup, and makes no remote requests for recording or displaying the timeline. Icons come from the browser's local favicon cache or bundled assets.
+PageAgo keeps recordings in your browser. It records the active HTTP(S) page's **URL, title and foreground time** in a focused, normal window. No account, server, analytics or remote activity requests. Icons come from the browser's local cache or bundled assets.
 
-It reads the current page's **URL, title, and activity times**, plus tab, window-focus, and system-idle state. Only the active HTTP(S) tab in a focused, normal browser window is eligible. Incognito windows are excluded. It does not read page content, cookies, passwords, forms, or browser history.
+Incognito windows are excluded. It does not read page content, cookies, passwords, forms or browser history.
 
-Keep these limits in mind:
+**Foreground time is an estimate**, not a measure of reading, attention or learning.
 
-- **Foreground time is an estimate.** It does not measure reading, attention, or learning. The idle threshold is 60 seconds; checkpoints run about every 30 seconds. Gaps over 45 seconds are discarded, and a crash may lose the last unsaved interval.
+<details>
+<summary>Timing and data details</summary>
+
+- **Timing.** The system-idle threshold is 60 seconds; checkpoints run about every 30 seconds. Gaps over 45 seconds are discarded, and a crash may lose the last unsaved interval.
 - **Exports contain full URLs**, including query parameters and fragments. URL username/password fields are removed. Imported JSON stays in the current page's memory and is not added to the recorder.
 - **At about 8 MiB, recording pauses** instead of deleting older data. Export before clearing or uninstalling; uninstalling removes the extension's local data.
 
 See the [recorder notes](prototypes/trace-next/extension/RECORDER.md) for measurement and recovery details, and the [technical guide](prototypes/trace-next/README.md) for the import format.
+
+</details>
 
 ## What's next
 
