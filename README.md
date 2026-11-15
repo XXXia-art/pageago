@@ -23,16 +23,6 @@
 
 PageAgo records estimated foreground browser activity and puts it on one daily timeline. Revisit a page, find a time, or look through the day without an account or server. The interface currently uses Simplified Chinese.
 
-## A day, at your own pace
-
-- **See the whole day, then look closer.** Colored intervals show recorded activity. Scroll or pinch to zoom down to a 30-minute view, drag to move through time, and select a page to inspect its visits. Pages from the same website highlight together.
-- **Move through time.** The 30-tick dial divides the day into 48-minute steps. Drag it to browse an hour, switch dates with the animated date keys, and optionally enable the locally synthesized dial sound.
-- **Find a page again.** Press `/` to search the selected day by title or domain, filter by website, and jump to a visit. Export all dates to JSON or open a compatible export locally.
-
-![PageAgo interactions: zooming, panning, resetting the timeline, searching synthetic activity, and changing dates.](docs/media/pageago-interactions.gif)
-
-Every screenshot and demo uses synthetic data.
-
 ## Get started
 
 Download or clone this repository:
@@ -72,21 +62,6 @@ Keep these limits in mind:
 - **At about 8 MiB, recording pauses** instead of deleting older data. Export before clearing or uninstalling; uninstalling removes the extension's local data.
 
 See the [recorder notes](prototypes/trace-next/extension/RECORDER.md) for measurement and recovery details, and the [technical guide](prototypes/trace-next/README.md) for the import format.
-
-## Development
-
-The prebuilt app runs offline. Rebuilding requires Python 3; tests use Node.js 22+ and a local Chromium browser. The optional hour-dial test also needs Playwright. Runtime libraries are bundled in the repository.
-
-```sh
-python prototypes/trace-next/build.py
-node --test prototypes/trace-next/tests/recorder.test.mjs
-node prototypes/trace-next/tests/dashboard.test.mjs
-node prototypes/trace-next/tests/extension.test.mjs
-```
-
-The build writes the standalone `output/pageago.html`, refreshes the demo and extension, and creates `output/pageago-extension.zip`. Tests use synthetic data and separate temporary browser profiles. See the [technical guide](prototypes/trace-next/README.md) for the remaining interaction checks and source files.
-
-Bundled [tldts and Three.js notices and licenses](prototypes/trace-next/vendor/) describe third-party dependencies. The earlier Edge history export and learning-review tools are documented in [legacy history tools](docs/legacy-history.md).
 
 ## What's next
 

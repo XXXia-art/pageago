@@ -23,16 +23,6 @@
 
 PageAgo 通过浏览器扩展记录前台网页活动的估计区间，用一条时间轴回看每天访问过的网页。无需账号或服务器，当前界面为简体中文。
 
-## 从一天总览，看到某次访问
-
-- **看全局，也看细节。** 色块表示已记录的活动区间。滚轮或捏合缩放，最细可查看 30 分钟；拖动浏览时段，点击网页查看各次访问，同一网站的网页会一起高亮。
-- **沿着时间浏览。** 30 格刻度均分全天，每格 48 分钟；拖动刻度查看附近一小时。用翻转日期键切换每天的记录，可开启本地合成的轻微刻度音效。
-- **找回某个网页。** 按 `/` 搜索当天的标题或域名，按网站筛选，定位某次访问。可将全部日期导出为 JSON，也可在本地打开兼容的导出文件。
-
-![PageAgo 交互演示：缩放、平移、重置时间轴、搜索网页与切换日期。记录均为合成数据。](docs/media/pageago-interactions.gif)
-
-所有截图和演示均使用合成数据。
-
 ## 开始使用
 
 下载或克隆仓库：
@@ -72,21 +62,6 @@ cd pageago
 - **约 8 MiB 时暂停记录**，不会自动删除旧数据。清空或卸载前请先导出；卸载会移除扩展本地数据。
 
 计时与恢复机制见[记录器说明](prototypes/trace-next/extension/RECORDER.md)，导入格式见[技术文档](prototypes/trace-next/README.md)。
-
-## 开发
-
-预构建页面可离线使用。重新构建需要 Python 3；测试使用 Node.js 22+ 和本机 Chromium 系浏览器，额外的小时刻度测试需要 Playwright。运行库已随仓库打包。
-
-```sh
-python prototypes/trace-next/build.py
-node --test prototypes/trace-next/tests/recorder.test.mjs
-node prototypes/trace-next/tests/dashboard.test.mjs
-node prototypes/trace-next/tests/extension.test.mjs
-```
-
-构建输出独立网页 `output/pageago.html`，更新演示与扩展，并生成 `output/pageago-extension.zip`。测试使用合成数据和独立临时浏览器配置。其他交互检查与源文件说明见[技术文档](prototypes/trace-next/README.md)。
-
-第三方依赖的来源和许可见 [tldts / Three.js 的 vendor 目录](prototypes/trace-next/vendor/)。早期 Edge 历史导出与学习复盘流程保留在[旧版历史记录工具](docs/legacy-history.md)中。
 
 ## 接下来
 
