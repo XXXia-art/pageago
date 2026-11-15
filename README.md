@@ -1,8 +1,9 @@
 <p align="center">
-  <img src="assets/brand/pageago-icon.svg" width="80" height="80" alt="PageAgo icon">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/brand/pageago-wordmark-dark.svg">
+    <img src="assets/brand/pageago-wordmark.svg" width="340" alt="PageAgo">
+  </picture>
 </p>
-
-<h1 align="center">PageAgo</h1>
 
 <p align="center">A local-first timeline of the pages you use in Edge and Chrome.</p>
 

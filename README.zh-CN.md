@@ -1,8 +1,9 @@
 <p align="center">
-  <img src="assets/brand/pageago-icon.svg" width="80" height="80" alt="PageAgo 图标">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/brand/pageago-wordmark-dark.svg">
+    <img src="assets/brand/pageago-wordmark.svg" width="340" alt="PageAgo">
+  </picture>
 </p>
-
-<h1 align="center">PageAgo</h1>
 
 <p align="center">把 Edge 与 Chrome 中的网页活动，留在本机的一条时间轴上。</p>
 

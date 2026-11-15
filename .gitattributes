@@ -6,8 +6,10 @@
 *.gif binary
 *.ico binary
 *.zip binary
+*.ttf binary
 
 # Preserve upstream bytes so dependency provenance hashes remain reproducible.
+assets/brand/source/** -text
 prototypes/trace-next/vendor/** -text
 prototypes/trace-next/extension/three* -text
 prototypes/trace-next/extension/tldts* -text

@@ -92,7 +92,7 @@ node prototypes\trace-next\tests\extension.test.mjs
 
 构建产生离线页面、扩展目录与 ZIP。测试使用独立 Edge 临时配置、合成数据与 localhost 测试页面，不读取个人浏览器配置。实际前台采集测试依赖操作系统非空闲；空闲时会明确报告相关检查跳过。
 
-额外的 `tests/hour-dial.test.mjs` 需要开发测试依赖 Playwright；品牌 PNG 导出与 README 动图编码脚本需要 Pillow。这些依赖不参与网页运行或常规构建。
+额外的 `tests/hour-dial.test.mjs` 需要开发测试依赖 Playwright；品牌字标导出脚本需要 Pillow 与 fontTools，README 动图编码脚本需要 Pillow。这些依赖不参与网页运行或常规构建。
 
 源文件：`index.template.html`、`dashboard.css`、`dashboard.js`、`date-control.js`、`date-control.css`、`date-capsule-three.js`、`date-timeline-motion.js`、`page-highlight.js`、`site-colors.js`、`build.py`、`extension/worker.js`、`extension/recorder-core.mjs`。
 

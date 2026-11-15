@@ -15,7 +15,7 @@ Additional GitHub, arXiv, ChatGPT and YouTube assets reuse the workspace's exist
 local icon catalogue. Unknown domains use a neutral initial, with no request to
 the website. Brand ownership remains with the respective owners.
 
-`pageago/pageago-*.png` are the original PageAgo extension icons, exported at
-16, 32, 48 and 128 pixels. The editable vector and a 512-pixel PNG live in
-[`assets/brand`](../../../assets/brand/); `scripts/render_brand.py` exports the
-raster versions. The mark combines a folded page with a returning clock hand.
+`pageago/pageago-*.png` are PageAgo's italic **P** monogram, exported at
+16, 32, 48 and 128 pixels. The outlined wordmark, monogram and the Instrument
+Serif font's OFL license live in [`assets/brand`](../../../assets/brand/).
+`scripts/render_brand.py` reproduces the exports with Pillow and fontTools.

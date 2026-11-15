@@ -1,9 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 128 128" fill="none">
-  <title>PageAgo</title>
-  <desc>A folded page holding a returning clock hand.</desc>
-  <rect width="128" height="128" rx="29" fill="#39473F"/>
-  <path d="M41 22h32l22 22v51a11 11 0 0 1-11 11H41a11 11 0 0 1-11-11V33a11 11 0 0 1 11-11Z" fill="#F1EBDC"/>
-  <path d="M73 22v15a7 7 0 0 0 7 7h15L73 22Z" fill="#C9D0BF"/>
-  <path d="M47 66a20 20 0 1 1-1 20" stroke="#39473F" stroke-width="5.5" stroke-linecap="round"/>
-  <path d="M47 56v11h11M65 65v13l8 5" stroke="#39473F" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="128.000" height="128.000" viewBox="0 0 128.000 128.000" role="img" aria-label="PageAgo P monogram">
+  <title>PageAgo P monogram</title>
+  <!-- Outlined from Instrument Serif Italic; source and OFL license: assets/brand/source. -->
+  <g fill="#7A7265" transform="translate(33.124 111.000) scale(0.130556 -0.130556)">
+    <path transform="translate(0.000 0)" d="M-22 0Q-36 0 -36 10Q-36 21 -16 24L4 27Q26 30 34.5 37.5Q43 45 47 66L183 654Q187 671 184.0 680.0Q181 689 158 693L138 697Q125 700 125 708Q125 720 143 720H338Q421 720 465.0 675.0Q509 630 509 562Q509 499 476.5 445.5Q444 392 386.5 359.0Q329 326 252 326H193Q177 326 172 309L116 70Q111 48 118.5 40.0Q126 32 151 29L199 23Q208 22 208 13Q208 0 190 0ZM195 406Q189 380 200.5 365.5Q212 351 249 351Q299 351 334.5 372.0Q370 393 392.5 426.5Q415 460 425.5 498.5Q436 537 436 572Q436 627 407.0 661.0Q378 695 322 695Q261 695 252 655Z"/>
+  </g>
 </svg>
