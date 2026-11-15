@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <meta name="color-scheme" content="light">
+  <title>PageAgo · 浏览器里的时间</title>
+  <link rel="icon" type="image/png" href="pageago-32.png">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+<svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+  <symbol id="i-mark" viewBox="0 0 28 28"><path d="M5 8h9M5 14h18M14 20h9" stroke="currentColor" stroke-width="4" stroke-linecap="round"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path d="m10 6 6 6-6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 6v5h5M4.5 10a8 8 0 1 1 1.8 7.6"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 4.5 4.5"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.75"/><ellipse cx="12" cy="12" rx="3.8" ry="8.75"/><path d="M3.5 12h17"/></symbol>
+  <symbol id="i-export" viewBox="0 0 24 24"><path d="M12 16V3m-4 4 4-4 4 4M5 13v7h14v-7"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v.5"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M14 4h6v6m0-6L10 14M10 5H4v15h15v-6"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h6m4 0h6M4 17h10m4 0h2"/><circle cx="12" cy="7" r="2"/><circle cx="16" cy="17" r="2"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4m8-4v4"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 6v12m8-12v12"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7Z"/></symbol>
+</defs></svg>
+
+<main id="canvas" aria-label="网页活动时间轴">
+  <section id="scene" class="scene" aria-label="今日网页">
+    <div id="axis" class="axis">
+      <div class="axis-line" aria-hidden="true"></div>
+      <div class="axis-track" aria-hidden="true"></div>
+      <div id="axis-graduations" class="axis-graduations" aria-hidden="true"></div>
+      <div id="axis-ticks" class="axis-ticks" aria-hidden="true"></div>
+      <div id="timeline-nav" class="timeline-nav" tabindex="0" role="group" aria-label="时间轴：滚轮缩放，左右拖动平移；键盘加减号缩放，左右键平移，Home 恢复全天"></div>
+      <div class="axis-controls" role="group" aria-label="时间轴缩放">
+        <button id="zoom-out" aria-label="缩小时间轴" title="缩小">−</button>
+        <button id="zoom-reset" aria-label="恢复完整时间范围" title="恢复完整时间范围">1×</button>
+        <button id="zoom-in" aria-label="放大时间轴" title="放大">+</button>
+      </div>
+    </div>
+    <div id="time-probe" class="time-probe" hidden aria-hidden="true">
+      <span class="probe-line"></span>
+      <span id="probe-badge" class="probe-time">
+        <time id="probe-time"></time>
+        <span id="probe-page" class="probe-page" hidden><span id="probe-title"></span></span>
+      </span>
+    </div>
+    <div id="constellation" class="constellation" aria-label="网页标签">
+      <svg id="event-links" class="event-links" aria-hidden="true"></svg>
+      <div id="event-tags" class="event-tags"></div>
+      <button id="more-pages" class="more-pages" aria-expanded="false" aria-haspopup="dialog" aria-controls="overflow-list" hidden></button>
+    </div>
+    <div id="lanes" class="lanes"></div>
+    <div class="hour-marker-track" aria-hidden="true"><i id="hour-marker" hidden></i></div>
+    <button id="empty-start" type="button" hidden>开始记录</button>
+  </section>
+  <div id="hour-dial">
+    <div class="hour-dial-body">
+      <div class="hour-dial-track" role="slider" tabindex="0" aria-label="快速定位时间" aria-description="滚轮缩放指向的时段，拖动或按方向键定位时间。" aria-controls="scene" aria-valuemin="0" aria-valuemax="1440" aria-valuenow="720"></div>
+      <output class="hour-dial-time" inert></output>
+    </div>
+    <button type="button" id="hour-dial-reset" aria-label="回到全天，刻度归到中午十二点" title="回到全天 · 12:00" aria-controls="scene" data-at-noon><svg aria-hidden="true"><use href="#i-reset"/></svg></button>
+  </div>
+  <div id="daylight-room" aria-hidden="true">
+    <canvas id="daylight-canvas"></canvas>
+  </div>
+</main>
+<div id="overflow-list" class="overflow-list" role="dialog" aria-label="未显示的网页" hidden></div>
+<nav id="date-control" class="date-control-dock" aria-label="浏览日期"></nav>
+<div class="corner-tools">
+  <button type="button" id="day-search-open" aria-label="搜索当天网页" aria-keyshortcuts="/" aria-haspopup="dialog" aria-controls="day-search-dialog" title="搜索当天网页（/）"><svg aria-hidden="true"><use href="#i-search"/></svg></button>
+</div>
+<aside id="inspector" class="inspector" aria-label="网页详情" inert>
+  <header>
+    <span id="detail-site"></span>
+    <button type="button" id="return-original-view" hidden>返回原视图</button>
+    <button class="icon-button" id="close-inspector" aria-label="关闭详情"><svg><use href="#i-close"/></svg></button>
+  </header>
+  <div id="inspector-content"></div>
+</aside>
+<dialog id="day-search-dialog" aria-label="搜索当天网页">
+  <div class="day-search-field">
+    <svg aria-hidden="true"><use href="#i-search"/></svg>
+    <button id="day-search-scope" type="button" hidden></button>
+    <input id="day-search-query" type="search" role="combobox" aria-label="搜索网页标题或域名" aria-haspopup="grid" aria-controls="day-search-results" aria-expanded="false" aria-autocomplete="list" autocomplete="off" spellcheck="false" autofocus>
+    <button id="day-search-browse" type="button" title="按网站查找" aria-label="按网站查找" aria-controls="day-search-sites" aria-pressed="false"><svg aria-hidden="true"><use href="#i-globe"/></svg></button>
+  </div>
+  <div class="day-search-drop" inert>
+    <div class="day-search-site-sheet">
+      <div id="day-search-sites" role="group" aria-label="选择网站" hidden></div>
+      <p class="day-search-no-sites" role="status" hidden>当天没有网页记录</p>
+      <div class="day-search-matches">
+        <div id="day-search-inline-sites"></div>
+        <div id="day-search-results" role="grid" aria-label="网页搜索结果"></div>
+        <p id="day-search-empty" role="status" hidden></p>
+      </div>
+    </div>
+  </div>
+</dialog>
+<dialog id="settings-dialog" aria-labelledby="dialog-title"><div class="dialog-header"><h2 id="dialog-title">设置</h2><button class="icon-button" id="close-dialog" aria-label="关闭"><svg><use href="#i-close"/></svg></button></div><div id="dialog-content"></div></dialog>
+<input type="file" id="import-input" accept="application/json,.json" hidden>
+<div id="tooltip" class="tooltip" role="tooltip" hidden></div><div id="toast" class="toast" role="status" hidden></div>
+<script src="tldts.umd.min.js"></script><script src="demo.js"></script><script src="icons.js"></script><script src="dial-audio.js"></script><script src="site-colors.js"></script><script src="three-0.180.0.min.js"></script><script src="date-capsule-three.js"></script><script src="date-control.js"></script><script src="page-highlight.js"></script><script src="date-timeline-motion.js"></script><script src="daylight-images.js"></script><script src="daylight-cat.js"></script><script src="daylight-room.js"></script><script src="hour-dial.js"></script><script src="day-search.js"></script><script src="dashboard.js"></script>
+</body>
+</html>

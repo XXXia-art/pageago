@@ -1,0 +1,153 @@
+*{box-sizing:border-box}
+:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:#3f403b;background:#efe8dc;font-synthesis:none;font-size:14px;--paper:#efe8dc;--ink:#3f403b;--muted:#858071;--line:#d5ccbc;--gutter:clamp(48px,5vw,96px)}
+html{scrollbar-gutter:stable}
+html,body{margin:0;min-height:100%;background:var(--paper)}body{overflow-x:hidden}button,input{font:inherit;color:inherit}button{cursor:pointer;border:0;background:none;padding:0;touch-action:manipulation}button:disabled{opacity:.3;cursor:default}button:active:not(:disabled){transform:scale(.96)}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #8a7558;outline-offset:5px}a{color:inherit;text-decoration:none}h1,h2,h3,p{margin:0}[hidden]{display:none!important}svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}.svg-library{position:absolute;width:0;height:0;overflow:hidden}
+#canvas{min-height:100vh;padding-top:max(calc(50vh - 16px),380px,var(--tag-space,0px));padding-bottom:100px}.scene{position:relative;height:120px;min-height:120px;width:100%;isolation:isolate}.axis{position:sticky;top:42px;height:34px;z-index:5;pointer-events:none}.axis-line{position:absolute;left:var(--gutter);right:var(--gutter);top:-8px;border-top:1px solid #b6a68e}.axis-ticks{position:absolute;left:var(--gutter);right:var(--gutter);top:58px;height:26px;color:#625a4d;font-variant-numeric:tabular-nums;font-size:18px;font-weight:550;letter-spacing:-.35px}.tick{position:absolute;transform:translateX(-50%);white-space:nowrap}.tick:first-child{transform:none}.tick:last-child{transform:translateX(-100%)}.tick.probe-covered{visibility:hidden}.axis:before{content:"";position:absolute;inset:-48px 0 -52px;background:var(--paper);opacity:var(--axis-surface,0);z-index:-1;pointer-events:none}
+.timeline-nav{touch-action:none;position:absolute;inset:-14px 0 -90px;pointer-events:auto;outline-offset:-3px;z-index:3;cursor:default}.timeline-nav:focus-visible{outline:2px solid #8a7558}.timeline-nav[aria-disabled="true"]{cursor:default}
+.lanes{z-index:6;position:absolute;left:var(--gutter);right:var(--gutter);top:0;pointer-events:none}.lane{position:absolute;inset:0 0 auto;height:34px;pointer-events:none}.site-icon{width:20px;height:20px;object-fit:contain;flex-shrink:0;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:550;background:#e4dbcd;color:#807667}
+.block{position:absolute;top:0;height:32px;min-width:0;border-radius:3px;background:var(--tone);pointer-events:none;transform-origin:50% 0;transform:translate3d(0,var(--stack-offset,0px),0) scaleY(var(--stack-scale,1));contain:layout style}
+#empty-start{position:absolute;top:110px;inset-inline:0;width:max-content;margin-inline:auto;font-size:14px;color:#776549;padding:8px 13px;border:1px solid #cfc0a8;border-radius:8px}
+.corner-tools{position:fixed;bottom:24px;right:28px;z-index:12}
+.inspector{position:fixed;right:30px;top:70px;width:360px;max-height:calc(100vh - 140px);overflow:auto;padding:22px 24px 26px;background:#f5efe5;border:1px solid #dcd0be;border-radius:16px;box-shadow:0 14px 45px #57442912;z-index:15;opacity:0;transform:translateY(15px);scrollbar-width:thin;scrollbar-color:#ccbea8 transparent}.inspector header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;color:#95856f;font-size:14px}.detail-title{font-family:Georgia,"Times New Roman","Noto Serif SC","Songti SC",serif;font-size:25px;font-weight:400;letter-spacing:-.3px;line-height:1.5;overflow-wrap:anywhere}.detail-url{display:flex;align-items:center;gap:7px;font-size:13px;color:#9b8e7b;margin-top:14px;margin-bottom:25px;overflow-wrap:anywhere}.detail-url svg{width:14px;height:14px;flex-shrink:0}.detail-metric{border-top:1px solid #dfd4c4;padding-top:22px;font-size:30px;letter-spacing:-.7px;font-weight:400}.detail-heading{margin:28px 0 13px;font-size:14px;font-weight:450;color:#95856f}.detail-session{padding:14px 0;width:100%;text-align:left;border-top:1px solid #e3d9c9;font-size:14px;font-variant-numeric:tabular-nums;color:#82735e;display:flex;justify-content:space-between;gap:15px}.detail-session time{white-space:nowrap}.no-items{font-size:14px;color:#a1937e;line-height:1.9;margin:20px 0}.icon-button{display:inline-flex;align-items:center;justify-content:center;min-width:32px;height:32px;border-radius:7px;color:#93856f}.icon-button:hover{background:#e5d9c8;color:#514837}.icon-button svg{width:18px;height:18px}
+.tooltip{position:fixed;max-width:min(560px,calc(100vw - 28px));z-index:18;background:#f5efe5;border:1px solid #d8cbb6;padding:12px 16px;border-radius:9px;box-shadow:0 5px 18px #5e4b3510;font-size:14px;color:#8f806b;pointer-events:none;line-height:1.8}.tooltip strong{display:block;font-size:14px;font-weight:500;color:#514c43;white-space:normal;overflow-wrap:anywhere}.tooltip span{font-variant-numeric:tabular-nums}.toast{position:fixed;bottom:25px;left:50%;transform:translateX(-50%);z-index:50;max-width:min(560px,80vw);background:#554f45;color:#f6f0e6;padding:13px 22px;border-radius:10px;font-size:14px;box-shadow:0 5px 20px #4a382812}
+ dialog{width:460px;max-width:90vw;max-height:85vh;overflow:auto;border:1px solid #d7c9b4;border-radius:16px;padding:26px;background:#f5efe5;color:#514b40;box-shadow:0 20px 70px #54452f20;scrollbar-width:thin}dialog::backdrop{background:#5b4b3825}.dialog-header{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:22px}.dialog-header h2{font-family:Georgia,"Times New Roman","Noto Serif SC","Songti SC",serif;font-size:25px;line-height:1.5;font-weight:400}.dialog-copy{font-size:14px;color:#968670;line-height:1.9;margin-bottom:20px}.setting-row{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:17px 0;border-top:1px solid #e1d5c3}.setting-row strong{font-size:14px;font-weight:500;display:block}.setting-row small{font-size:13px;line-height:1.7;color:#a1927c;display:block;margin-top:5px}.button{padding:8px 13px;background:#eee4d6;border:1px solid #d4c4ad;border-radius:7px;font-size:14px;white-space:nowrap}.button:hover{background:#e6dac8}.button.primary{background:#7e8e78;border-color:#7e8e78;color:#fffaf0}.button.danger{color:#ae6855}.dialog-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}.modal-note{font-size:13px;line-height:1.9;color:#a3947f}.setup-steps{padding-left:22px;font-size:14px;line-height:1.9;color:#89785f}.setup-steps li{padding:7px 0}.setup-path{font-size:13px;overflow-wrap:anywhere;border:1px solid #dfd2be;padding:12px;border-radius:7px;margin:16px 0;color:#8e795b}.date-control{display:flex;align-items:center;gap:10px;margin:0 0 22px}.date-control input{background:transparent;border:1px solid #d5c7b3;border-radius:7px;padding:8px;min-width:0;flex:1;color:#867356}.segmented{display:flex;background:#e9dfd0;border-radius:8px;padding:3px;gap:3px}.segmented button{padding:7px 12px;font-size:14px;color:#95836c;border-radius:5px}.segmented button.active{background:#f9f3e9;color:#5e523f}.record-button{display:flex;align-items:center;gap:8px}.record-button svg{width:14px;height:14px}
+@media(max-width:1000px){:root{--gutter:32px}.inspector{width:330px;right:20px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+@media(prefers-contrast:more){:root{--line:#a99a83;--muted:#655b4b}.tick{color:#514635}.block{outline:1px solid #75644e}}
+
+.axis.stuck{z-index:10}
+
+/* Only the dated record plane travels. Ruler, controls and eight-row headroom stay fixed. */
+.date-motion-departure{position:fixed;inset:0;z-index:8;pointer-events:none;overflow:hidden;contain:layout style paint;will-change:transform,opacity}
+
+/* Real page labels create a readable outline above the folded time band. */
+.constellation{position:absolute;left:var(--gutter);right:var(--gutter);top:0;height:1px;z-index:4;pointer-events:none}
+.event-links{position:absolute;left:0;top:-260px;width:100%;height:280px;overflow:visible;pointer-events:none}
+.event-link{fill:none;stroke:var(--tone);stroke-width:1;stroke-opacity:.32;stroke-linejoin:round}
+.event-anchor{fill:var(--tone);stroke:var(--paper);stroke-width:1.5}
+.event-tags{position:absolute;inset:0;pointer-events:none}
+.event-tag{position:absolute;display:inline-flex;align-items:center;gap:var(--title-gap,0px);height:32px;width:var(--tag-width,32px);max-width:none;padding:3px;white-space:nowrap;border-radius:10px;pointer-events:auto;background:color-mix(in srgb,var(--tone),var(--paper) 72%);border:1px solid color-mix(in srgb,var(--tone),var(--paper) 38%);color:color-mix(in srgb,var(--tone),#302d27 72%);font-size:14px;font-weight:500;box-shadow:none;text-align:left;flex-direction:row}
+.event-tag:hover{background:color-mix(in srgb,var(--tone),var(--paper) 56%)}
+.event-tag .site-icon{width:24px;height:24px;border-radius:50%;background:#f5efe5;padding:1px}
+.site-icon img{display:block;width:100%;height:100%;object-fit:contain;border-radius:3px}
+.event-name{min-width:0;flex:0 0 var(--title-width,0px);width:var(--title-width,0px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:22px}
+.event-tag.icon-only{border-radius:50%}
+.more-pages{position:absolute;height:32px;min-width:48px;padding:4px 12px;background:#e4d7c3;border:1px solid #baa17d;color:#725c3d;border-radius:16px;pointer-events:auto;font-size:14px}
+.more-pages:hover{background:#d9c7aa}
+
+
+
+/* Time navigation stays on the ruler; interval data never changes. */
+.axis-controls{position:absolute;right:var(--gutter);top:85px;z-index:4;display:flex;align-items:center;gap:2px;pointer-events:auto;color:#7a6851}
+.axis-controls button{min-width:32px;height:30px;border-radius:8px;font-size:18px;background:transparent}
+.axis-controls button:hover{background:#e3d9c8}
+.axis-controls button:disabled{opacity:.25}
+.axis-controls #zoom-reset{min-width:48px;font-size:13px;font-variant-numeric:tabular-nums}
+.zoomed .timeline-nav{cursor:grab}
+.dragging .timeline-nav{cursor:grabbing}
+.lane{clip-path:inset(-40px 0 -16px 0);overflow-x:clip;overflow-y:visible}
+
+
+/* A graduated, solid time ruler; overlays never intercept timeline gestures. */
+.axis-track{position:absolute;left:var(--gutter);right:var(--gutter);top:-1px;height:34px;background:#e7dece;border:1px solid #dbd0bd;border-radius:4px;pointer-events:none}
+.axis-graduations{position:absolute;left:var(--gutter);right:var(--gutter);top:40px;height:12px;pointer-events:none}
+.ruler-tick{position:absolute;top:0;height:5px;border-left:1px solid #c3b6a1}
+.ruler-tick.is-major{height:12px;border-color:#99866b}
+.time-probe{position:absolute;top:0;width:0;z-index:7;pointer-events:none}
+.probe-line{position:absolute;left:0;top:-10px;height:62px;border-left:1px solid #695640;box-shadow:1px 0 #efe8dc}
+.probe-line:before{content:"";position:absolute;left:-3px;top:-2px;width:5px;height:5px;border-radius:50%;background:#695640}
+.probe-time{position:absolute;top:54px;left:0;height:28px;display:flex;align-items:center;white-space:nowrap;padding:0 9px;border-radius:6px;background:#625746;color:#fcf7ee;font-size:14px;font-weight:550;font-variant-numeric:tabular-nums;letter-spacing:.15px;box-shadow:0 0 0 3px var(--paper)}
+#probe-badge{width:max-content}
+#probe-time{flex:none}
+.probe-page{display:inline-flex;align-items:center;gap:6px;min-width:0;margin-left:8px;padding-left:8px;border-left:1px solid #92897a}
+.probe-page .site-icon{width:18px;height:18px;padding:1px;background:#f6f0e7}
+#probe-title{max-width:16em;min-width:0;overflow:hidden;text-overflow:ellipsis;font-weight:500}
+.axis-controls{gap:0;padding:2px;border:1px solid #d9cebb;border-radius:9px;background:var(--paper)}
+.axis-controls button{height:27px;border-radius:6px}
+.axis-controls #zoom-reset{font-size:13px;min-width:48px}
+@media(prefers-contrast:more){.ruler-tick{border-color:#7e705a}.axis-ticks{color:#433b30}.axis-track{border-color:#a7977c}}
+
+
+/* Hidden labels stay reachable without a second timeline layout. */
+.overflow-list{position:fixed;z-index:14;overflow:auto;overscroll-behavior:contain;padding:6px;border:1px solid #d1c3ac;border-radius:12px;background:#f5efe5;box-shadow:0 8px 28px #57442912;scrollbar-width:thin;scrollbar-color:#c9baa4 transparent}
+.overflow-item{display:flex;align-items:center;width:100%;gap:11px;padding:11px 12px;border-radius:7px;text-align:left;color:#514b40}
+.overflow-item:hover,.overflow-item:focus-visible{background:#e6dccb}.overflow-item:focus-visible{outline-offset:-2px}
+.overflow-item .site-icon{width:24px;height:24px;background:transparent}
+.overflow-title{font-size:14px;line-height:22px;min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.overflow-time{font-size:13px;font-variant-numeric:tabular-nums;color:#887a66;flex-shrink:0}
+
+.hour-marker-track { position:absolute; top:-7px; height:42px; inset-inline:var(--gutter); pointer-events:none; z-index:7; }
+#hour-marker { position:absolute; height:100%; width:2px; background:#68594a; transform:translateX(-50%); }
+#hour-marker::before { content:""; position:absolute; width:6px; height:6px; border-radius:50%; left:-2px; top:-2px; background:inherit; }
+#hour-dial {
+  position:relative; display:flex; align-items:center;
+  width:min(328px, calc(100% - 2 * var(--gutter))); margin:5px auto 0;
+  color:#675c4e; font-variant-numeric:tabular-nums;
+  user-select:none; cursor:default; caret-color:transparent;
+}
+#hour-dial-reset { position:absolute; inset-inline-start:calc(100% + 4px); display:grid; place-items:center; width:36px; height:36px; border-radius:50%; color:#675c4e; }
+#hour-dial-reset svg { width:17px; height:17px; transform-origin:center; }
+#hour-dial-reset[data-at-noon] { color:#a69b8b; }
+#hour-dial-reset:is(:hover,:focus-visible) { color:#675c4e; background:#e3d9ca; }
+.hour-dial-body { position:relative; min-width:0; flex:1; }
+.hour-dial-track {
+  display:flex; align-items:center; height:52px; outline:none;
+  touch-action:none; cursor:grab;
+}
+.hour-dial-track:focus-visible + .hour-dial-time { text-decoration:underline; text-underline-offset:2px; }
+#hour-dial[data-dragging] .hour-dial-track { cursor:grabbing; }
+.hour-dial-bar {
+  flex:1; min-width:0; position:relative; height:100%; pointer-events:none;
+}
+.hour-dial-bar::after {
+  content:""; position:absolute; inset-inline:20%; top:50%; height:56px;
+  border-radius:calc(1px + 4px * var(--lift, 0)); background:#c7bdad;
+  transform:translateY(-50%) scaleY(calc((12 + 40 * var(--lift, 0)) / 56));
+}
+.hour-dial-bar[data-lit]::after { background:#837361; }
+.hour-dial-bar[data-current]::after { background:#574b40; }
+.hour-dial-time {
+  position:absolute; left:var(--position, 50%); top:100%; transform:translateX(-50%);
+  font-size:13px; font-weight:550; line-height:18px; pointer-events:none; opacity:0;
+}
+#hour-dial:is(:focus-within, [data-dragging], [data-locked]) .hour-dial-time { opacity:1; }
+.scene:has(#empty-start:not([hidden])) + #hour-dial { margin-top:42px; }
+#daylight-room {
+  --room-height: min(clamp(108px, 18vh, 174px), 42vw);
+  inline-size: calc(var(--room-height) * 704 / 378);
+  block-size: var(--room-height);
+  margin: 24px auto 0;
+  border-radius: 8px;
+  overflow: hidden;
+  pointer-events: none;
+}
+#daylight-canvas {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+/* Leave a lane for the lower labels between the time ruler and the hour dial. */
+:root[data-label-layout="split"]:not([data-embed]) #canvas { padding-top: max(clamp(160px, 30vh, 340px), var(--tag-space, 0px)); }
+:root[data-label-layout="split"]:not([data-embed]) .scene { height: calc(120px + var(--lower-space, 0px)); }
+:root[data-label-layout="split"]:not([data-embed]) .axis { position: relative; top: 0; }
+:root[data-label-layout="split"]:not([data-embed]) .timeline-nav { bottom: -50px; }
+:root[data-label-layout="split"]:not([data-embed]) .axis-controls { top: calc(85px + var(--lower-space, 0px)); }
+
+/* Opt-in iframe view. Its host supplies the wallpaper behind the timeline. */
+:root[data-embed="timeline"] { --gutter: clamp(16px, 2.5vw, 40px); background: transparent; }
+[data-embed="timeline"] body { background: transparent; }
+[data-embed="timeline"] #canvas { padding: max(76px, calc(100vh - 144px)) 0 0; }
+[data-embed="timeline"] .axis { position: relative; top: 0; }
+[data-embed="timeline"] .axis-ticks { color: #413d36; text-shadow: 0 1px 3px #fff9; }
+[data-embed="timeline"] .axis-track { background: rgb(237 228 210 / 70%); }
+[data-embed="timeline"] .axis-controls { top: 92px; right: calc(var(--gutter) + 42px); }
+[data-embed="timeline"] #daylight-room { display: none; }
+[data-embed="timeline"] #hour-dial { position: absolute; left: 50%; bottom: 4px; width: min(26vw, 292px); margin: 0; transform: translateX(-50%); }
+[data-embed="timeline"] #hour-dial .hour-dial-time { top: auto; bottom: 100%; }
+[data-embed="timeline"] #date-control { left: var(--gutter); bottom: 8px; }
+[data-embed="timeline"] .corner-tools { right: var(--gutter); bottom: 13px; }
+[data-embed="timeline"] .inspector { top: 10px; max-height: calc(100vh - 20px); }
+@media (max-width: 860px) {
+  [data-embed="timeline"] #hour-dial { display: none; }
+}

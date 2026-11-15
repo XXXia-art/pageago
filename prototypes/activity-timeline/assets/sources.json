@@ -1,0 +1,12 @@
+{
+  "huggingface.ico": {
+    "source": "https://huggingface.co/favicon.ico",
+    "purpose": "Identify the Hugging Face website in the local synthetic demonstration.",
+    "retrieved": "2026-11-03",
+    "runtime_network_required": false
+  },
+  "other_icons": {
+    "source": "../../../skills/edge-learning-review/assets/site_icons.json",
+    "provenance": "../../../skills/edge-learning-review/references/site-icon-sources.md"
+  }
+}

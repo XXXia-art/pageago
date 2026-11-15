@@ -1,0 +1,9 @@
+{
+  "name": "tldts",
+  "version": "7.4.19",
+  "source": "https://github.com/remusao/tldts",
+  "tarball": "https://registry.npmjs.org/tldts/-/tldts-7.4.19.tgz",
+  "integrity": "sha512-48dH6aSpQnpbzDUc4vIQZ1VjB8tkK+e8c1yx05/SZK+rkssgjEOlxDd/yU8/a4vGYQ9vRgJr9dwMq9TJ0b3X2Q==",
+  "bundled_sha256": "92bffbc6ecd2362212b2fb093d07cc75efd507d5270f98ef1ed83bc2fbc52d04",
+  "modifications": "Only removed the sourceMappingURL directive; bundle and domain data execute locally."
+}

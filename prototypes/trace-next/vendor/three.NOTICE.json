@@ -1,0 +1,10 @@
+{
+  "package": "three",
+  "version": "0.180.0",
+  "license": "MIT",
+  "source": "https://github.com/mrdoob/three.js/tree/r180",
+  "local_source": "prototypes/seu-pixel-campus/node_modules/three",
+  "bundler": "esbuild 0.25.11",
+  "bundle_sha256": "18ee430bb04f5af2a548960a4cf2f4c7803b496c0dcac698f4c4b2a4fa52946d",
+  "runtime_network": false
+}

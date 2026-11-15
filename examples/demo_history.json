@@ -1,0 +1,287 @@
+{
+  "dataset_kind": "demo",
+  "description": "Synthetic demonstration data. These visits do not describe any real person's activity.",
+  "status": "complete",
+  "start_time": "2026-11-01T00:00:00+08:00",
+  "end_time": "2026-11-01T18:00:00+08:00",
+  "event_count": 27,
+  "profiles": [
+    {
+      "profile": "Demo",
+      "event_count": 27
+    }
+  ],
+  "errors": [],
+  "visits": [
+    {
+      "profile": "Demo",
+      "visit_id": 1,
+      "url": "https://arxiv.org/",
+      "title": "arXiv · 研究论文与预印本",
+      "visit_time": "2026-11-01T09:05:00+08:00",
+      "topic_id": "vision-action",
+      "topic_label": "论文与研究",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 2,
+      "url": "https://arxiv.org/",
+      "title": "arXiv · 研究论文与预印本",
+      "visit_time": "2026-11-01T09:18:00+08:00",
+      "topic_id": "vision-action",
+      "topic_label": "论文与研究",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 11,
+      "url": "https://kyutai.org/",
+      "title": "Kyutai · 研究动态与技术文章",
+      "visit_time": "2026-11-01T09:25:00+08:00",
+      "topic_id": "vision-action",
+      "topic_label": "论文与研究",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 3,
+      "url": "https://arxiv.org/list/cs.CV/recent",
+      "title": "计算机视觉论文 · arXiv",
+      "visit_time": "2026-11-01T10:04:00+08:00",
+      "topic_id": "vision-action",
+      "topic_label": "论文与研究",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 12,
+      "url": "https://kyutai.org/",
+      "title": "Kyutai · 研究动态与技术文章",
+      "visit_time": "2026-11-01T10:15:00+08:00",
+      "topic_id": "vision-action",
+      "topic_label": "论文与研究",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 21,
+      "url": "https://github.com/",
+      "title": "GitHub · 开源项目与源码",
+      "visit_time": "2026-11-01T10:30:00+08:00",
+      "topic_id": "open-source",
+      "topic_label": "开源代码研读",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 22,
+      "url": "https://github.com/explore",
+      "title": "探索开源项目 · GitHub",
+      "visit_time": "2026-11-01T10:42:00+08:00",
+      "topic_id": "open-source",
+      "topic_label": "开源代码研读",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 31,
+      "url": "https://gitee.com/",
+      "title": "Gitee · 项目文档与代码",
+      "visit_time": "2026-11-01T10:53:00+08:00",
+      "topic_id": "open-source",
+      "topic_label": "开源代码研读",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 23,
+      "url": "https://github.com/trending",
+      "title": "热门开源项目 · GitHub",
+      "visit_time": "2026-11-01T11:05:00+08:00",
+      "topic_id": "open-source",
+      "topic_label": "开源代码研读",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 32,
+      "url": "https://gitee.com/",
+      "title": "Gitee · 项目文档与代码",
+      "visit_time": "2026-11-01T11:12:00+08:00",
+      "topic_id": "open-source",
+      "topic_label": "开源代码研读",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 61,
+      "url": "https://chatgpt.com/",
+      "title": "ChatGPT · 研究问题整理",
+      "visit_time": "2026-11-01T11:30:00+08:00",
+      "topic_id": "notes",
+      "topic_label": "笔记与视频参考",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 24,
+      "url": "https://github.com/",
+      "title": "GitHub · 开源项目与源码",
+      "visit_time": "2026-11-01T13:35:00+08:00",
+      "topic_id": "open-source",
+      "topic_label": "开源代码研读",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 33,
+      "url": "https://gitee.com/",
+      "title": "Gitee · 项目文档与代码",
+      "visit_time": "2026-11-01T13:46:00+08:00",
+      "topic_id": "open-source",
+      "topic_label": "开源代码研读",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 4,
+      "url": "https://arxiv.org/list/cs.CV/recent",
+      "title": "计算机视觉论文 · arXiv",
+      "visit_time": "2026-11-01T14:20:00+08:00",
+      "topic_id": "vision-action",
+      "topic_label": "论文与研究",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 13,
+      "url": "https://kyutai.org/",
+      "title": "Kyutai · 研究动态与技术文章",
+      "visit_time": "2026-11-01T14:38:00+08:00",
+      "topic_id": "vision-action",
+      "topic_label": "论文与研究",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 62,
+      "url": "https://chatgpt.com/",
+      "title": "ChatGPT · 研究问题整理",
+      "visit_time": "2026-11-01T14:52:00+08:00",
+      "topic_id": "notes",
+      "topic_label": "笔记与视频参考",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 41,
+      "url": "https://www.bing.com/",
+      "title": "Bing · 技术资料检索",
+      "visit_time": "2026-11-01T15:05:00+08:00",
+      "topic_id": "browser-dev",
+      "topic_label": "工具与资料检索",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 42,
+      "url": "https://www.bing.com/",
+      "title": "Bing · 技术资料检索",
+      "visit_time": "2026-11-01T15:16:00+08:00",
+      "topic_id": "browser-dev",
+      "topic_label": "工具与资料检索",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 51,
+      "url": "https://www.feishu.cn/",
+      "title": "飞书 · 实验笔记与学习复盘",
+      "visit_time": "2026-11-01T15:32:00+08:00",
+      "topic_id": "browser-dev",
+      "topic_label": "工具与资料检索",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 43,
+      "url": "https://www.bing.com/",
+      "title": "Bing · 技术资料检索",
+      "visit_time": "2026-11-01T15:43:00+08:00",
+      "topic_id": "browser-dev",
+      "topic_label": "工具与资料检索",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 52,
+      "url": "https://www.feishu.cn/",
+      "title": "飞书 · 实验笔记与学习复盘",
+      "visit_time": "2026-11-01T16:08:00+08:00",
+      "topic_id": "browser-dev",
+      "topic_label": "工具与资料检索",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 63,
+      "url": "https://chatgpt.com/",
+      "title": "ChatGPT · 研究问题整理",
+      "visit_time": "2026-11-01T16:40:00+08:00",
+      "topic_id": "notes",
+      "topic_label": "笔记与视频参考",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 71,
+      "url": "https://www.bilibili.com/",
+      "title": "哔哩哔哩 · 技术视频与参考",
+      "visit_time": "2026-11-01T16:55:00+08:00",
+      "topic_id": "notes",
+      "topic_label": "笔记与视频参考",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 44,
+      "url": "https://www.bing.com/",
+      "title": "Bing · 技术资料检索",
+      "visit_time": "2026-11-01T17:12:00+08:00",
+      "topic_id": "browser-dev",
+      "topic_label": "工具与资料检索",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 53,
+      "url": "https://www.feishu.cn/",
+      "title": "飞书 · 实验笔记与学习复盘",
+      "visit_time": "2026-11-01T17:26:00+08:00",
+      "topic_id": "browser-dev",
+      "topic_label": "工具与资料检索",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 64,
+      "url": "https://chatgpt.com/",
+      "title": "ChatGPT · 研究问题整理",
+      "visit_time": "2026-11-01T17:45:00+08:00",
+      "topic_id": "notes",
+      "topic_label": "笔记与视频参考",
+      "kind": "learning"
+    },
+    {
+      "profile": "Demo",
+      "visit_id": 72,
+      "url": "https://www.bilibili.com/",
+      "title": "哔哩哔哩 · 技术视频与参考",
+      "visit_time": "2026-11-01T17:56:00+08:00",
+      "topic_id": "notes",
+      "topic_label": "笔记与视频参考",
+      "kind": "learning"
+    }
+  ]
+}

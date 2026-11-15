@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 128 128" fill="none">
+  <title>PageAgo</title>
+  <desc>A folded page holding a returning clock hand.</desc>
+  <rect width="128" height="128" rx="29" fill="#39473F"/>
+  <path d="M41 22h32l22 22v51a11 11 0 0 1-11 11H41a11 11 0 0 1-11-11V33a11 11 0 0 1 11-11Z" fill="#F1EBDC"/>
+  <path d="M73 22v15a7 7 0 0 0 7 7h15L73 22Z" fill="#C9D0BF"/>
+  <path d="M47 66a20 20 0 1 1-1 20" stroke="#39473F" stroke-width="5.5" stroke-linecap="round"/>
+  <path d="M47 56v11h11M65 65v13l8 5" stroke="#39473F" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

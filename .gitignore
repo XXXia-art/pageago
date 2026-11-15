@@ -1,0 +1,32 @@
+__pycache__/
+*.py[cod]
+output/
+.edge-history-*/
+.edge-test-*/
+.learning-test-*/
+.timeline-test-*/
+.timeline-browser-*/
+
+# Local generated PageAgo pages may embed personal browsing records.
+/activity.html
+
+# Personal records, databases and local credentials never belong in a release.
+.env
+.env.*
+!.env.example
+*.db
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+History
+History-journal
+History-wal
+History-shm
+/tests/daytrace_real_visits_test.mjs
+
+# Dependencies and unrelated, unpublished experiments stay on this computer.
+node_modules/
+/prototypes/seu-pixel-campus/
+/tests/seu_campus_test.mjs
+/prototypes/trace-next/archive/

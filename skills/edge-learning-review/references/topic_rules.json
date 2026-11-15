@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "rules": [
+    {"id": "vla-icl", "label": "VLA 与上下文学习", "kind": "learning", "pattern": "stella\\s*vla|ici[- ]?vla|vision[- ]language[- ]action|\\bvla\\b"},
+    {"id": "vlm", "label": "视觉语言模型", "kind": "learning", "pattern": "qwen[ -]?3[- ]?vl|vision[- ]language model|\\bvlm\\b|视觉语言模型"},
+    {"id": "attention", "label": "Attention 机制", "kind": "learning", "pattern": "attention[ -]?(score|mechanism)|注意力机制|attention mask"},
+    {"id": "browser-dev", "label": "浏览器扩展与自动化", "kind": "learning", "pattern": "browser\\.history|chrome\\.history|manifest|浏览器扩展|browser extension|codex.*(chrome|浏览器)|chrome.*codex|developer\\.chrome\\.google"},
+    {"id": "codex-tools", "label": "Codex 工具使用", "kind": "learning", "pattern": "codex.*(指南|教程|skill)|codexguide\\.ai"},
+    {"id": "research", "label": "论文与开源研究（主题待细化）", "kind": "learning", "pattern": "arxiv\\.org|查找论文开源代码"},
+    {"id": "finance", "label": "财经浏览", "kind": "other", "pattern": "eastmoney\\.com|10jqka\\.com|最新价格_行情|同花顺"},
+    {"id": "navigation", "label": "登录与导航", "kind": "other", "pattern": "auth\\.openai\\.com|microsoftedge\\.microsoft\\.com|打开 ChatGPT|欢迎回来"}
+  ]
+}

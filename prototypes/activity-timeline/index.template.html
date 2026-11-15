@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>PageAgo · 网页活动时间线</title>
+  <style>/* ACTIVITY_CSS */</style>
+</head>
+<body>
+  <svg class="icon-library" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="3"/><path d="M7 3v4m10-4v4M4 10h16"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-timeline" viewBox="0 0 24 24"><path d="M4 5h10v4H4zM10 15h10v4H10zM3 3v18m18-18v18"/></symbol>
+    <symbol id="i-fold" viewBox="0 0 24 24"><path d="M4 4h16M4 20h16m4-12 4 4 4-4m-8 8 4-4 4 4"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M14 3h7v7m-1-6-9 9M10 5H4v15h15v-6"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></symbol>
+    <symbol id="i-page" viewBox="0 0 24 24"><path d="M14 3H5v18h14V8zm0 0v6h5M8 13h8m-8 4h6"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+  </defs></svg>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="PageAgo 首页">PageAgo<span>.</span></a>
+      <div class="header-actions">
+        <details class="options-menu" id="options-menu">
+          <summary class="icon-button" id="options-trigger" aria-label="更多选项" title="更多选项"><svg class="icon"><use href="#i-more"/></svg></summary>
+          <div class="options-panel">
+            <label class="sort-label" for="sort">排列顺序</label>
+            <select id="sort" aria-label="排序方式"><option value="duration">时长优先</option><option value="first">首次访问</option><option value="name">名称排序</option></select>
+            <button class="fold-button" id="fold-all"><svg class="icon"><use href="#i-fold"/></svg><span>全部展开</span></button>
+            <div class="menu-divider"></div>
+            <button class="button" id="save-button"><svg class="icon"><use href="#i-download"/></svg>保存离线网页</button>
+          </div>
+        </details>
+      </div>
+      <input id="file-input" type="file" accept=".json,application/json" hidden>
+    </header>
+
+    <main class="timeline-card" aria-label="网页活动时间线">
+      <div class="toolbar">
+        <div class="day-heading">
+          <div class="date-control">
+            <label class="date-label"><h1 id="date-text"></h1><input type="date" id="date-input" aria-label="选择日期"></label>
+            <div class="date-arrows">
+              <button class="icon-button previous" id="previous-day" aria-label="上一天"><svg class="icon"><use href="#i-arrow"/></svg></button>
+              <button class="icon-button" id="next-day" aria-label="下一天"><svg class="icon"><use href="#i-arrow"/></svg></button>
+            </div>
+          </div>
+          <div class="day-summary"><span id="day-context"></span><span class="summary-dot">·</span><span id="record-count" class="record-count"></span></div>
+        </div>
+        <div class="view-controls">
+          <div class="segmented" role="group" aria-label="时间线分组"><button id="view-site" aria-pressed="true">按网站</button><button id="view-page" aria-pressed="false">按网页</button></div>
+          <div class="zoom-control" role="group" aria-label="缩放"><button id="zoom-out" aria-label="缩小">−</button><button id="zoom-reset" title="恢复全天" aria-label="恢复全天">100%</button><button id="zoom-in" aria-label="放大">＋</button></div>
+        </div>
+      </div>
+
+      <div id="chart-scroll" class="chart-scroll" tabindex="0" aria-label="可滚动时间线，方向键移动，Ctrl 加滚轮缩放">
+        <div id="chart-content" class="chart-content">
+          <div class="time-ruler">
+            <div class="label-heading"><span id="row-heading">网站 / 网页</span><span>活动时长</span></div>
+            <div id="axis" class="axis"><div id="periods" class="periods"></div><div id="ticks" class="ticks"></div><span id="cursor-time" class="cursor-time" hidden></span></div>
+          </div>
+          <div id="rows"></div>
+          <div id="empty-state" class="empty-state" hidden><h2>暂无活动</h2><p id="empty-description"></p></div>
+          <div id="cursor-line" class="cursor-line" hidden></div>
+        </div>
+      </div>
+
+      <div class="overview" aria-label="全天缩略时间线，点击定位"><div class="overview-label"><span>全天</span><span class="overview-range">06:00 — 24:00</span></div><div class="overview-track" id="overview-track"><div id="overview-events"></div><div id="overview-window"></div></div></div>
+    </main>
+  </div>
+
+  <div id="tooltip" class="tooltip" role="tooltip" hidden></div>
+  <button class="drawer-backdrop" id="drawer-backdrop" aria-label="关闭详情" hidden></button>
+  <aside id="drawer" class="drawer" role="region" aria-labelledby="drawer-title" hidden>
+    <header class="drawer-header"><span id="drawer-site"></span><button class="icon-button" id="drawer-close" aria-label="关闭详情"><svg class="icon"><use href="#i-close"/></svg></button></header>
+    <div id="drawer-content"></div>
+  </aside>
+  <div id="toast" role="status" aria-live="polite" hidden></div>
+  <script id="activity-data" type="application/json">/* ACTIVITY_DATA */</script>
+  <script id="site-icons" type="application/json">/* ACTIVITY_ICONS */</script>
+  <script>/* ACTIVITY_JS */</script>
+</body>
+</html>

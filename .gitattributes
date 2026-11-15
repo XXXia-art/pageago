@@ -1,0 +1,13 @@
+* text=auto eol=lf
+*.cmd text eol=crlf
+*.png binary
+*.jpg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.zip binary
+
+# Preserve upstream bytes so dependency provenance hashes remain reproducible.
+prototypes/trace-next/vendor/** -text
+prototypes/trace-next/extension/three* -text
+prototypes/trace-next/extension/tldts* -text

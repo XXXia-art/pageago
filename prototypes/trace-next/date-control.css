@@ -1,0 +1,22 @@
+/* Three independent matte keycaps, with no surrounding capsule or base. */
+.date-control-dock{position:fixed;left:28px;bottom:24px;display:flex;align-items:center;gap:9px;z-index:13}
+.date-step{display:grid;place-items:center;width:38px;height:38px;padding:3px;border:1px solid #d6cfc2;border-radius:50%;background:#e6dfd3;color:#70695f;box-shadow:0 2px 5px #5c51400a}
+.date-step-face{display:grid;place-items:center;width:30px;height:30px;border:1px solid #e8e1d6;border-radius:50%;background:#f2ede4;box-shadow:inset 0 1px 0 #fffaf080,0 1px 2px #685d4a12;transform:translateY(-1px);transition:transform 100ms ease-out,box-shadow 100ms ease-out}
+.date-step:hover .date-step-face{background:#f7f2e9}.date-step svg{width:16px;height:16px}
+.date-step:active:not(:disabled){transform:none}.date-step:active:not(:disabled) .date-step-face{transform:translateY(1.5px);box-shadow:inset 0 1px 2px #685d4a10;transition-duration:45ms}
+.date-trigger{display:flex;align-items:center;gap:3px;height:48px;padding:5px;border:1px solid transparent;border-radius:0;background:transparent;box-shadow:none;overflow:visible}
+.date-trigger:active:not(:disabled){transform:none}
+/* Native labels preserve layout, accessibility, and a static no-WebGL fallback. */
+.date-trigger{position:relative;width:164px;isolation:isolate}
+.date-month,.date-day,.date-calendar{position:relative;display:grid;place-items:center;height:36px;flex-shrink:0;font-variant-numeric:tabular-nums;color:#625e56;border:1px solid #e4ddd1;background:#f2ede4;box-shadow:inset 0 1px 0 #fffaf060}
+.date-month,.date-day{font-family:inherit;font-size:18px;font-weight:500;letter-spacing:0;border-radius:4px}
+.date-month{width:64px}.date-day{width:46px}.date-calendar{width:36px;border-radius:4px}.date-calendar svg{width:17px;height:17px;color:#726c63}
+.date-three-canvas{position:absolute;left:0;top:-6px;width:100%;height:calc(100% + 12px);display:block;pointer-events:none;z-index:1}
+.date-trigger[data-renderer=three]>.date-month,.date-trigger[data-renderer=three]>.date-day,.date-trigger[data-renderer=three]>.date-calendar{visibility:hidden}
+.date-trigger[data-renderer=fallback]>.date-three-canvas{display:none}
+@media(prefers-reduced-motion:reduce){.date-step-face{transition:none}}
+.date-popover{position:fixed;padding:14px;border:1px solid #d1c3ac;border-radius:17px;background:#f5efe5;box-shadow:0 10px 32px #57442914;color:#574b3a;overflow:auto;overscroll-behavior:contain}
+.calendar-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.calendar-header span{font-size:16px;font-weight:550;font-variant-numeric:tabular-nums}.calendar-step{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;color:#8a765b}.calendar-step:hover{background:#e6dccb}.calendar-step svg{width:17px;height:17px}
+.calendar-weekdays,.calendar-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}.calendar-weekdays{margin-bottom:8px;text-align:center;font-size:13px;line-height:25px;color:#91816b}
+.calendar-day{height:34px;min-width:0;border-radius:50%;font-size:14px;font-variant-numeric:tabular-nums}.calendar-day:hover{background:#e5dac9}.calendar-day.outside-month{color:#a79a86}.calendar-day[aria-current=date]:not(.is-selected){text-decoration:underline;text-underline-offset:6px;text-decoration-color:#a18b6a}.calendar-day.is-selected{background:#786750;color:#fff9ef}.calendar-day:focus-visible{outline-offset:1px;outline-width:1px}.calendar-day:disabled{opacity:.3;background:transparent}
+.calendar-footer{display:flex;align-items:center;justify-content:space-between;border-top:1px solid #e1d6c5;padding-top:10px;margin-top:13px}.calendar-footer button{padding:5px 8px;border-radius:6px;font-size:14px;color:#857057}.calendar-footer button:hover{background:#e6dccb}

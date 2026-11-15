@@ -1,0 +1,133 @@
+/* A desktop activity tool: date-led hierarchy, quiet canvas, local controls. */
+:root {
+  --paper: #f7f7f5;
+  --ink: #24282f;
+  --line: #e0e2e4;
+  --glass-surface: #ffffffb8;
+  --glass-floating: linear-gradient(145deg, #fffffff5, #f8f9fbe8);
+}
+.app-shell { padding: 16px 32px 18px; gap: 8px; }
+.topbar { position: relative; z-index: 45; height: 52px; border: 0; gap: 18px; }
+.brand { font-size: 22px; font-weight: 650; letter-spacing: -.65px; color: #30343b; }
+.brand span { color: #88929d; }
+.search-box { max-width: 320px; margin-left: auto; }
+.search-box input { height: 36px; font-size: 14px; border-radius: 10px; border-color: #c5cbd24d; }
+.search-box { border-radius: 10px; }
+.search-box input::placeholder { color: #737d88; }
+.header-actions { gap: 12px; margin-left: auto; }
+.header-actions > .button { min-height: 34px; border-radius: 9px; box-shadow: none; background: #e9f0fb; border-color: transparent; color: #2861ac; }
+.header-actions > .button:hover { background: #dde9fa; }
+.source-badge { box-shadow: none; border-color: transparent; background: #eee9db99; font-size: 12px; min-height: 28px; }
+.toolbar { height: 96px; align-items: center; padding: 0 0 18px; border-bottom: 0; gap: 24px; }
+.day-heading { min-width: 0; }
+.date-control { justify-content: flex-start; gap: 20px; padding: 0; }
+.date-label { padding: 0; }
+.date-label h1 { font-size: 30px; font-weight: 600; line-height: 1.3; letter-spacing: -.65px; color: #22272e; }
+.date-label input { border: 0; }
+.date-arrows { display: flex; gap: 2px; }
+.date-arrows .icon-button { width: 29px; height: 30px; color: #6c7682; }
+.day-summary { display: flex; align-items: baseline; gap: 10px; margin-top: 8px; color: #727b86; font-size: 13px; white-space: nowrap; }
+.summary-dot { color: #a7aeb6; }
+.record-count { color: #727b86; }
+.record-count b { font-size: 13px; font-weight: 500; color: #4b5765; }
+.record-count .count-dot { padding: 0 6px; color: #a7aeb6; }
+.view-controls { gap: 14px; padding-top: 4px; }
+.segmented { border-color: #d7dce180; background: #e9ebee99; border-radius: 10px; }
+.segmented button { padding: 4px 13px; border-radius: 7px; }
+.segmented button[aria-pressed=true] { color: #2a3543; }
+.zoom-control { border-radius: 10px; border-color: #d8dde380; box-shadow: none; }
+.time-ruler { border-top: 1px solid var(--line); }
+.periods { border-bottom: 0; }
+.tick, .tick.minor { border-color: #e4e6e880; }
+.tick span { color: #485361; }
+.day-period, .day-period:nth-child(2), .day-period:nth-child(3) { color: #89919b; }
+.label-heading, .label-heading span:last-child { color: #7a8490; }
+.chart-row { height: 46px; border-bottom-color: #e3e6e83d; }
+.group-row { height: 48px; border-bottom-color: #e3e6e899; }
+.child-row { height: 44px; }
+.row-track { background-image: linear-gradient(to right, #e2e5e780 1px, transparent 1px); }
+.row-label, .group-row .row-label { color: #3b4653; }
+.row-label:hover, .group-row .row-label:hover { background: #eeeff0; }
+.chart-row:hover .row-track { background-color: #536b8c06; }
+.chart-row.selected .row-label { background: #e9edf2; }
+.row-duration { color: #76818e; }
+.group-count { color: #929aa3; }
+.group-name { font-weight: 600; }
+.interval-hit { top: 7px; height: 32px; }
+.group-row .interval-hit { top: 8px; }
+.child-row .interval-hit { top: 6px; }
+.interval-bar { border-radius: 5px; box-shadow: inset 0 1px 0 #ffffff66; }
+.interval-hit[aria-pressed=true] .interval-bar { box-shadow: 0 0 0 2px var(--accent), 0 2px 6px var(--halo); }
+.overview { border-top-color: var(--line); height: 46px; }
+.overview-track { height: 22px; background: #e6e9eb80; border-radius: 6px; }
+.overview-event { top: 4px; }
+#overview-window { border-color: #8a9bad; border-radius: 6px; box-shadow: 0 0 0 10000px #f7f7f599; }
+.chart-footer { border-top: 0; color: #89929c; height: 30px; }
+#basis-label, #timezone, .interaction-hint { color: #7b8590; }
+.inspector-open .record-count { display: inline; }
+.inspector-open .drawer { top: 88px; border-color: #ffffff; box-shadow: 0 8px 28px #24364e0b, 0 0 0 1px #3a526415; }
+.inspector-open .day-summary { gap: 7px; }
+.inspector-open .toolbar { gap: 12px; }
+.inspector-open .date-label h1 { font-size: 28px; }
+.inspector-open .view-controls { gap: 8px; }
+.inspector-open .day-summary .count-dot { padding: 0 4px; }
+.inspector-open .overview-label { width: var(--label-width); }
+
+.options-menu { position: relative; }
+.options-menu summary { list-style: none; cursor: pointer; border: 1px solid #d9dfe580; background: #ffffff80; border-radius: 9px; }
+.options-menu summary::-webkit-details-marker { display: none; }
+.options-menu[open] summary { background: #e8edf4; color: #285a97; }
+.options-panel { position: absolute; right: 0; top: calc(100% + 10px); width: 244px; padding: 12px; border: 1px solid #fff; border-radius: 14px; background: var(--glass-floating); box-shadow: 0 10px 32px #273d5821, 0 0 0 1px #3a526416; backdrop-filter: blur(20px); }
+.sort-label { display: block; padding: 2px 8px 7px; color: #7c8591; font-size: 12px; }
+.options-panel #sort { width: 100%; max-width: none; padding: 7px 9px; border: 1px solid #cbd2db80; background: #ffffff80; margin-bottom: 8px; border-radius: 8px; color: #3e4d5f; }
+.options-panel .fold-button, .options-panel .button { display: flex; width: 100%; justify-content: flex-start; gap: 9px; padding: 8px; border: 0; box-shadow: none; border-radius: 8px; background: transparent; color: #34485f; font-size: 14px; font-weight: 400; }
+.options-panel .fold-button:hover, .options-panel .button:hover { background: #e7edf7; }
+.options-panel .fold-button span { display: inline; }
+.menu-divider { height: 1px; margin: 6px 4px; background: #dbe0e680; }
+/* Secondary labels remain readable at their small, information-dense sizes. */
+.day-summary, .record-count, .day-period, .day-period:nth-child(2), .day-period:nth-child(3),
+.label-heading, .label-heading span:last-child, .row-duration, .group-count,
+.chart-footer, #basis-label, #timezone, .interaction-hint, .sort-label { color: #606c7b; }
+.search-box input::placeholder { color: #687480; }
+@media (max-width: 1250px) {
+  .app-shell { padding-inline: 20px; }
+  .day-summary { gap: 7px; }
+  .date-control { gap: 12px; }
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  :root { --glass-floating: #fff; }
+  .options-panel { backdrop-filter: none; background: #fff; border-color: #9ca8b5; }
+}
+@media (prefers-contrast: more) {
+  .day-summary, .record-count, .row-duration, .group-count, .day-period,
+  .label-heading, .label-heading span:last-child, #basis-label, #timezone { color: #334758; }
+}
+
+/* One stable surface, continuous reversible motion; no background scrim. */
+:root, :root.inspector-open { --label-width: 300px; }
+.timeline-card, .inspector-open .timeline-card { margin-right: var(--inspector-space, 0px); }
+.drawer, .inspector-open .drawer {
+  top: 88px; right: 24px; bottom: 20px; width: 380px; padding: 20px;
+  border-radius: 18px; border-color: #fff; animation: none;
+  transform-origin: right center;
+  box-shadow: 0 12px 36px #24364e14, 0 0 0 1px #3a526415;
+}
+.drawer[inert] { pointer-events: none; }
+.drawer h2, .inspector-open .drawer h2 { font-size: 21px; }
+.inspector-open .date-label h1 { font-size: 30px; }
+.inspector-open .day-summary { gap: 10px; }
+.inspector-open .day-summary .count-dot { padding: 0 6px; }
+.inspector-open .view-controls { gap: 14px; }
+.inspector-open .toolbar { gap: 24px; }
+.inspector-open .day-period { padding-left: 14px; }
+/* Only the period names are needed; the ruler already supplies exact times. */
+.day-period span { display: none; }
+@media (max-width: 1250px) {
+  .inspector-open .day-summary { gap: 7px; }
+}
+
+/* History timestamps remain points, never invented duration bars. */
+.visit-dot { position: absolute; top: 11px; width: 9px; height: 9px; border: 1.5px solid var(--accent); background: var(--fill); transform: translateX(-50%) rotate(45deg); border-radius: 2px; }
+.visit-hit:hover .visit-dot, .visit-hit:focus-visible .visit-dot, .visit-hit[aria-pressed=true] .visit-dot { background: var(--accent); box-shadow: 0 0 0 3px var(--halo); }
+
+.visit-hit { overflow: hidden; }

@@ -1,0 +1,23 @@
+/* Only bundled in the local site-group preview. */
+[data-site-groups] .event-tag.site-group {
+  justify-content: center;
+  gap: 5px;
+  padding-inline: 5px 9px;
+  border-radius: 16px;
+  font-variant-numeric: tabular-nums;
+  background: color-mix(in srgb, var(--tone) 13%, var(--paper));
+  border-color: color-mix(in srgb, var(--tone) 43%, var(--paper));
+}
+[data-site-groups] .site-group .site-icon {
+  width: 22px;
+  height: 22px;
+}
+[data-site-groups] .site-group .event-name {
+  flex: none;
+  width: auto;
+  font-weight: 600;
+}
+[data-site-groups] .site-group:hover,
+[data-site-groups] .site-group:focus-visible {
+  background: color-mix(in srgb, var(--tone) 26%, var(--paper));
+}

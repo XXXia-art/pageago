@@ -1,0 +1,330 @@
+{
+  "schema": "daytrace.activity.v1",
+  "date": "2026-11-03",
+  "utc_offset": "+08:00",
+  "source": "synthetic",
+  "time_basis": "foreground_intervals",
+  "description": "全部为合成示例区间。标题和网址用于界面演示，不代表真实访问、阅读或学习。",
+  "sessions": [
+    {
+      "id": "demo-001",
+      "title": "VLA in-context learning · 搜索",
+      "url": "https://www.bing.com/search?q=VLA+in+context+learning",
+      "start": "2026-11-03T06:40:00+08:00",
+      "end": "2026-11-03T06:47:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-002",
+      "title": "多模态学习 · 问题与讨论",
+      "url": "https://www.zhihu.com/search?type=content&q=多模态学习",
+      "start": "2026-11-03T07:03:00+08:00",
+      "end": "2026-11-03T07:18:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-003",
+      "title": "Attention Is All You Need",
+      "url": "https://arxiv.org/abs/1706.03762",
+      "start": "2026-11-03T08:12:00+08:00",
+      "end": "2026-11-03T08:46:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-004",
+      "title": "Qwen3-VL · 模型代码与使用示例",
+      "url": "https://github.com/QwenLM/Qwen3-VL",
+      "start": "2026-11-03T08:46:00+08:00",
+      "end": "2026-11-03T09:02:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-005",
+      "title": "Learning Transferable Visual Models From Natural Language Supervision",
+      "url": "https://arxiv.org/abs/2103.00020",
+      "start": "2026-11-03T09:02:00+08:00",
+      "end": "2026-11-03T09:28:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-006",
+      "title": "Qwen3-VL · 模型列表",
+      "url": "https://huggingface.co/models?search=Qwen3-VL",
+      "start": "2026-11-03T09:28:00+08:00",
+      "end": "2026-11-03T09:43:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-007",
+      "title": "Qwen3-VL · 模型代码与使用示例",
+      "url": "https://github.com/QwenLM/Qwen3-VL",
+      "start": "2026-11-03T09:43:00+08:00",
+      "end": "2026-11-03T10:08:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-008",
+      "title": "Attention mask 与注意力分数",
+      "url": "https://chatgpt.com/?demo=attention",
+      "start": "2026-11-03T10:08:00+08:00",
+      "end": "2026-11-03T10:18:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-009",
+      "title": "An Image is Worth 16x16 Words",
+      "url": "https://arxiv.org/abs/2010.11929",
+      "start": "2026-11-03T10:18:00+08:00",
+      "end": "2026-11-03T10:42:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-010",
+      "title": "OpenVLA · 视觉语言动作模型",
+      "url": "https://github.com/openvla/openvla",
+      "start": "2026-11-03T10:42:00+08:00",
+      "end": "2026-11-03T11:06:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-011",
+      "title": "Transformers · 模型文档",
+      "url": "https://huggingface.co/docs/transformers/index",
+      "start": "2026-11-03T11:06:00+08:00",
+      "end": "2026-11-03T11:18:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-012",
+      "title": "Transformers · 多模态模型实现",
+      "url": "https://github.com/huggingface/transformers",
+      "start": "2026-11-03T11:18:00+08:00",
+      "end": "2026-11-03T11:39:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-013",
+      "title": "Attention Is All You Need",
+      "url": "https://arxiv.org/abs/1706.03762",
+      "start": "2026-11-03T11:39:00+08:00",
+      "end": "2026-11-03T11:53:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-014",
+      "title": "Vision Transformer · 搜索",
+      "url": "https://www.bing.com/search?q=vision+transformer",
+      "start": "2026-11-03T12:05:00+08:00",
+      "end": "2026-11-03T12:09:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-015",
+      "title": "视觉语言模型入门",
+      "url": "https://search.bilibili.com/all?keyword=视觉语言模型",
+      "start": "2026-11-03T12:09:00+08:00",
+      "end": "2026-11-03T12:42:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-016",
+      "title": "ViT 论文与代码讲解",
+      "url": "https://search.bilibili.com/all?keyword=ViT论文",
+      "start": "2026-11-03T12:42:00+08:00",
+      "end": "2026-11-03T12:56:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-017",
+      "title": "视觉语言模型 · 在线演示",
+      "url": "https://huggingface.co/spaces?search=vision%20language",
+      "start": "2026-11-03T13:15:00+08:00",
+      "end": "2026-11-03T13:31:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-018",
+      "title": "FlashAttention · 注意力计算实现",
+      "url": "https://github.com/Dao-AILab/flash-attention",
+      "start": "2026-11-03T13:31:00+08:00",
+      "end": "2026-11-03T14:03:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-019",
+      "title": "An Image is Worth 16x16 Words",
+      "url": "https://arxiv.org/abs/2010.11929",
+      "start": "2026-11-03T14:03:00+08:00",
+      "end": "2026-11-03T14:20:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-020",
+      "title": "论文阅读笔记",
+      "url": "https://www.feishu.cn/?demo=reading-notes",
+      "start": "2026-11-03T14:20:00+08:00",
+      "end": "2026-11-03T14:36:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-021",
+      "title": "Qwen3-VL · 模型代码与使用示例",
+      "url": "https://github.com/QwenLM/Qwen3-VL",
+      "start": "2026-11-03T14:36:00+08:00",
+      "end": "2026-11-03T15:02:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-022",
+      "title": "上下文学习与示例检索",
+      "url": "https://chatgpt.com/?demo=icl",
+      "start": "2026-11-03T15:02:00+08:00",
+      "end": "2026-11-03T15:16:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-023",
+      "title": "Attention score · 搜索",
+      "url": "https://www.bing.com/search?q=attention+score",
+      "start": "2026-11-03T15:16:00+08:00",
+      "end": "2026-11-03T15:28:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-024",
+      "title": "Transformers · 多模态模型实现",
+      "url": "https://github.com/huggingface/transformers",
+      "start": "2026-11-03T15:28:00+08:00",
+      "end": "2026-11-03T15:56:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-025",
+      "title": "Qwen3-VL · 模型列表",
+      "url": "https://huggingface.co/models?search=Qwen3-VL",
+      "start": "2026-11-03T15:56:00+08:00",
+      "end": "2026-11-03T16:21:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-026",
+      "title": "OpenVLA · 视觉语言动作模型",
+      "url": "https://github.com/openvla/openvla",
+      "start": "2026-11-03T16:21:00+08:00",
+      "end": "2026-11-03T16:38:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-027",
+      "title": "Learning Transferable Visual Models From Natural Language Supervision",
+      "url": "https://arxiv.org/abs/2103.00020",
+      "start": "2026-11-03T16:38:00+08:00",
+      "end": "2026-11-03T16:58:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-028",
+      "title": "实验记录与待办",
+      "url": "https://www.feishu.cn/?demo=experiment-notes",
+      "start": "2026-11-03T17:10:00+08:00",
+      "end": "2026-11-03T17:42:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-029",
+      "title": "Edge extension · 搜索",
+      "url": "https://www.bing.com/search?q=edge+extension",
+      "start": "2026-11-03T17:42:00+08:00",
+      "end": "2026-11-03T17:57:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-030",
+      "title": "Attention 机制可视化",
+      "url": "https://www.youtube.com/results?search_query=attention+visualized",
+      "start": "2026-11-03T19:08:00+08:00",
+      "end": "2026-11-03T19:38:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-031",
+      "title": "视觉语言动作模型演示",
+      "url": "https://www.youtube.com/results?search_query=vision+language+action",
+      "start": "2026-11-03T19:38:00+08:00",
+      "end": "2026-11-03T20:14:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-032",
+      "title": "整理实验问题与下一步计划",
+      "url": "https://chatgpt.com/?demo=review",
+      "start": "2026-11-03T20:14:00+08:00",
+      "end": "2026-11-03T20:26:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-033",
+      "title": "Qwen3-VL · Issues",
+      "url": "https://github.com/QwenLM/Qwen3-VL/issues",
+      "start": "2026-11-03T20:26:00+08:00",
+      "end": "2026-11-03T20:48:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-034",
+      "title": "论文阅读笔记",
+      "url": "https://www.feishu.cn/?demo=reading-notes",
+      "start": "2026-11-03T20:48:00+08:00",
+      "end": "2026-11-03T21:12:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-035",
+      "title": "In-context learning 实践",
+      "url": "https://search.bilibili.com/all?keyword=in-context-learning",
+      "start": "2026-11-03T21:12:00+08:00",
+      "end": "2026-11-03T21:36:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-036",
+      "title": "多模态学习 · 问题与讨论",
+      "url": "https://www.zhihu.com/search?type=content&q=多模态学习",
+      "start": "2026-11-03T21:36:00+08:00",
+      "end": "2026-11-03T21:49:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-037",
+      "title": "OpenVLA · 实验配置与运行说明",
+      "url": "https://github.com/openvla/openvla#readme",
+      "start": "2026-11-03T22:10:00+08:00",
+      "end": "2026-11-03T22:32:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-038",
+      "title": "Attention Is All You Need",
+      "url": "https://arxiv.org/abs/1706.03762",
+      "start": "2026-11-03T22:32:00+08:00",
+      "end": "2026-11-03T22:48:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-039",
+      "title": "实验记录与待办",
+      "url": "https://www.feishu.cn/?demo=experiment-notes",
+      "start": "2026-11-03T23:02:00+08:00",
+      "end": "2026-11-03T23:12:00+08:00",
+      "profile": "示例"
+    },
+    {
+      "id": "demo-040",
+      "title": "VLA in-context learning · 搜索",
+      "url": "https://www.bing.com/search?q=VLA+in+context+learning",
+      "start": "2026-11-03T23:25:00+08:00",
+      "end": "2026-11-03T23:25:40+08:00",
+      "profile": "示例"
+    }
+  ]
+}

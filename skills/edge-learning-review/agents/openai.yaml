@@ -1,0 +1,4 @@
+interface:
+  display_name: "PageAgo \u00b7 \u6d4f\u89c8\u624b\u8bb0"
+  short_description: "\u628a\u8bba\u6587\u3001\u4ee3\u7801\u4e0e\u6587\u6863\u8bbf\u95ee\u6574\u7406\u6210\u6709\u8bc1\u636e\u7684\u5b66\u4e60\u590d\u76d8\u548c\u79bb\u7ebf\u65f6\u95f4\u8f74\u7f51\u9875"
+  default_prompt: "Use $edge-learning-review to review today's learning and generate a PageAgo timeline, distinguishing visit evidence from unmeasured activity time."
