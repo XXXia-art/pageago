@@ -122,6 +122,13 @@ try{
     await until(async()=>{const next=(await snapshot()).viewport;if(previous&&next.every((n,i)=>Math.abs(n-previous[i])<.01))consecutive++;else consecutive=0;previous=next;return consecutive>=4;},'stable viewport',6000);
     return snapshot();
   };
+  const motionFrames=async action=>{
+    await ev(`(()=>{window.__navFrames=[];window.__navSampling=true;function sample(){if(!window.__navSampling)return;window.__navFrames.push({at:performance.now(),viewport:traceSnapshot().viewport});requestAnimationFrame(sample);}requestAnimationFrame(sample);})()`);
+    try{await action();await stableViewport();}
+    finally{await ev('window.__navSampling=false');}
+    return ev('window.__navFrames');
+  };
+  const wheelBurst=async(deltas,fraction=.5)=>ev(`(async()=>{const n=document.querySelector('#timeline-nav'),r=document.querySelector('#lanes').getBoundingClientRect();for(const deltaY of ${JSON.stringify(deltas)}){n.dispatchEvent(new WheelEvent('wheel',{bubbles:true,cancelable:true,clientX:r.x+r.width*${fraction},clientY:r.y+16,deltaY,deltaMode:0}));await new Promise(resolve=>requestAnimationFrame(resolve));}})()`);
   const plotPoint=async(fraction=.5)=>ev(`(()=>{const r=document.querySelector('#lanes').getBoundingClientRect();return {x:r.x+r.width*${fraction},y:r.y+16};})()`);
   const ruler=async label=>{
     const state=await ev(`(()=>{const plot=document.querySelector('#lanes').getBoundingClientRect(),ticks=[...document.querySelectorAll('#axis-graduations .ruler-tick')].map(n=>{const r=n.getBoundingClientRect();return {major:n.classList.contains('is-major'),x:r.x,right:r.right,height:r.height};}),labels=[...document.querySelectorAll('#axis-ticks .tick')].map(n=>{const r=n.getBoundingClientRect();return {text:n.textContent,left:r.left,right:r.right,fontSize:parseFloat(getComputedStyle(n).fontSize)};});return {left:plot.left,right:plot.right,ticks,labels};})()`);
@@ -279,6 +286,55 @@ try{
   assert.deepEqual(current.viewport,initial.bounds,'maximum visible span is the selected full base range');
   assert.equal(current.zoom,1);await unchangedData(initial,'bounded zoom');
   checks.push('horizontal drag/wheel pan, 30-minute minimum, full-range maximum and silent hard boundaries');
+
+  // Sample the live camera between wheel notches, rather than only checking its destination.
+  const smoothBefore=await snapshot(),smoothPoint=await plotPoint(.61);let smoothEvent;
+  const smoothFrames=await motionFrames(async()=>{smoothEvent=await wheel(smoothPoint,0,-150);});
+  const smoothAfter=await snapshot(),smoothTarget=span(smoothBefore)*Math.exp(-150*.002);
+  assert.ok(Math.abs(span(smoothAfter)-smoothTarget)<2,'one wheel notch retains its original scale increment');
+  const intermediate=smoothFrames.filter(f=>{const width=f.viewport[1]-f.viewport[0];return width<span(smoothBefore)-2&&width>smoothTarget+2;});
+  assert.ok(new Set(intermediate.map(f=>Math.round(f.viewport[1]-f.viewport[0]))).size>=3,'a single mouse-wheel notch paints multiple intermediate scales instead of one jump');
+  const anchoredInstant=smoothBefore.viewport[0]+span(smoothBefore)*smoothEvent.fraction;
+  for(const frame of intermediate)assert.ok(Math.abs(frame.viewport[0]+(frame.viewport[1]-frame.viewport[0])*smoothEvent.fraction-anchoredInstant)<2,'the pointer instant remains anchored throughout the spring, not only after settling');
+  const burstBefore=await snapshot();
+  await motionFrames(()=>wheelBurst([-90,-90,-90]));
+  assert.ok(Math.abs(span(await snapshot())-span(burstBefore)*Math.exp(-270*.002))<2,'rapid wheel events accumulate every delta while the display is still following its target');
+  const reverseBefore=await snapshot(),reversePoint=await plotPoint(.5);
+  const reverseFrames=await motionFrames(async()=>{await wheel(reversePoint,0,-200);await wheel(reversePoint,0,200);});
+  assert.ok(Math.abs(span(await snapshot())-span(reverseBefore))<2,'reversing before the spring settles returns to the net wheel target without losing the earlier input');
+  assert.ok(reverseFrames.some(f=>f.viewport[1]-f.viewport[0]<span(reverseBefore)-1000),'reverse test observes a real in-flight change before returning');
+  await exactIntervals(sessions,'smooth wheel');await unchangedData(initial,'smooth wheel');
+  checks.push('wheel zoom paints intermediate anchored scales; rapid notches accumulate and an in-flight reversal settles at the exact net target');
+
+  const grabPoint=await plotPoint(.5);
+  await mouse('mouseMoved',grabPoint);await mouse('mouseWheel',grabPoint,{deltaX:0,deltaY:-450});await pause(25);
+  await mouse('mousePressed',grabPoint,{button:'left',buttons:1,clickCount:1});const grabbed=await snapshot();
+  await pause(140);assert.deepEqual((await snapshot()).viewport,grabbed.viewport,'pointer-down interrupts wheel zoom at the actual visible viewport');
+  const grabWidth=await ev('document.querySelector("#lanes").getBoundingClientRect().width');
+  await mouse('mouseMoved',{x:grabPoint.x+80,y:grabPoint.y},{button:'left',buttons:1});await pause(150);
+  await mouse('mouseReleased',{x:grabPoint.x+80,y:grabPoint.y},{button:'left',buttons:0,clickCount:1});
+  const draggedAfterWheel=await stableViewport();
+  assert.ok(Math.abs(span(draggedAfterWheel)-span(grabbed))<2,'dragging a grabbed zoom keeps the presented scale');
+  assert.ok(Math.abs(draggedAfterWheel.viewport[0]-(grabbed.viewport[0]-80/grabWidth*span(grabbed)))/span(grabbed)*grabWidth<.1,'drag continues from the grabbed time window within a tenth of a pixel rather than the abandoned zoom target');
+  const beforeReset=await plotPoint(.5);await mouse('mouseMoved',beforeReset);await mouse('mouseWheel',beforeReset,{deltaX:0,deltaY:-350});await pause(25);
+  await click('#hour-dial-reset');await stableViewport();await pause(180);
+  assert.deepEqual((await snapshot()).viewport,initial.bounds,'noon reset replaces an in-flight wheel target and stays at the full-day overview');
+  assert.equal(await ev('document.querySelector(".hour-dial-time").textContent'),'12:00','reset keeps the selected time at noon throughout the completed return');
+  assert.equal(await ev('document.querySelector("#hour-marker").hidden'),true,'reset clears the previous selected-time marker');
+  checks.push('pointer-down and drag interrupt a live wheel spring without a jump or residual zoom; noon reset replaces the old target');
+
+  await ev(`document.querySelector('.hour-dial-track').addEventListener('wheel',event=>{const r=event.currentTarget.getBoundingClientRect();window.__navDialMinute=Math.round(Math.max(0,Math.min(1,(event.clientX-r.left)/r.width))*1440);},{capture:true,once:true})`);
+  const dialFrames=await motionFrames(async()=>wheel(await point('.hour-dial-track',.625),0,-150));
+  const dialAfter=await snapshot(),dialMinute=await ev('window.__navDialMinute');
+  assert.ok(Math.abs(span(dialAfter)-span(initial)*Math.exp(-150*.002))<2,'the lower dial uses the same accumulated zoom scale');
+  assert.ok(new Set(dialFrames.map(f=>Math.round(f.viewport[1]-f.viewport[0]))).size>=4,'lower dial wheel zoom also paints intermediate scales');
+  assert.ok(Math.abs(center(dialAfter)-(baseStart+dialMinute*60000))<2,'lower dial wheel zoom centers its requested local time');
+  assert.equal(await ev('document.querySelector("#hour-dial").hasAttribute("data-locked")'),true,'lower dial keeps its selected time locked while its camera animates');
+  assert.equal(await ev('document.querySelector(".hour-dial-track").getAttribute("aria-valuenow")'),String(dialMinute),'lower dial selection is not overwritten by the moving camera center');
+  assert.ok(await ev('!document.querySelector("#hour-marker").hidden&&Math.abs(parseFloat(document.querySelector("#hour-marker").style.left)-50)<.001'),'selected-time marker reaches the middle of the completed dial zoom');
+  await click('#hour-dial-reset');await stableViewport();
+  assert.deepEqual((await snapshot()).viewport,initial.bounds);
+  checks.push('lower-dial wheel shares smooth camera motion and retains its requested time, marker and lock until reset');
 
   await focus('#timeline-nav');
   for(const shortcut of [{key:'+',code:'Equal',ctrlKey:true},{key:'-',code:'Minus',metaKey:true},{key:'ArrowLeft',code:'ArrowLeft',altKey:true}]){

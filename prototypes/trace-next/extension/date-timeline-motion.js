@@ -5,7 +5,7 @@
     'box-sizing','padding','margin','border','border-radius','background','box-shadow','color','font-family',
     'font-size','font-weight','font-style','line-height','letter-spacing','text-align','white-space','overflow',
     'text-overflow','vertical-align','align-items','justify-content','flex-direction','flex-shrink','flex-basis',
-    'gap','object-fit','transform','transform-origin','clip-path','z-index','opacity','fill','stroke',
+    'gap','object-fit','transform','translate','transform-origin','clip-path','z-index','opacity','fill','stroke',
     'stroke-width','stroke-opacity','stroke-linejoin','stroke-linecap'];
 
   function create({scene, parts, reduced}) {

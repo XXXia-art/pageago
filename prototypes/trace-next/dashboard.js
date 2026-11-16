@@ -17,10 +17,13 @@
   const view=[0,1440];
   const laneMap=new Map(),tagMap=new Map();let rangeStart=0,rangeEnd=1;
   const titleMeasure=document.createElement('canvas').getContext('2d');
+  const smoothLabel=value=>{const p=Math.max(0,Math.min(1,value));return p*p*(3-2*p);};
   const BAR_HEIGHT=32;
   const sessionStacks=[];
   let stackHeight=BAR_HEIGHT,stackTop=0;
-  const camera={start:0,end:1,frame:0,last:0,targetStart:0,targetEnd:1,velocityStart:0,velocityEnd:0};
+  const camera={start:0,end:1,frame:0,last:0,targetStart:0,targetEnd:1,velocityStart:0,velocityEnd:0,lockAt:null};
+  let wheelZoomTarget=null;
+  let tagMotionFrame=0,tagMotionTime=0,tagMotionPaused=false;
   const room = embedded ? null : TraceDaylightRoom.create({canvas: $('#daylight-canvas')});
   let lockedTime = null, roomMinute = 9 * 60, scrubOrigin = null;
   const hourDial = TraceHourDial.create({
@@ -54,7 +57,7 @@
     onWheelZoom(value, event) {
       if (!date) return;
       if (navigator.userActivation?.hasBeenActive) dial.unlock();
-      zoomCamera(wheelZoomFactor(event), {dialInstant: hourInstant(value)});
+      zoomCamera(wheelZoomFactor(event), {dialInstant: hourInstant(value),wheel:true});
     }
   });
   const MIN_SPAN=30*60000;
@@ -305,57 +308,148 @@
     }
     layoutTags();
   }
-  function layoutTags(){
+  function paintTagPose(item){
+    const pose=item.pose,layout=item.tagLayout;
+    if(!pose||!layout||item.button.hidden)return;
+    const left=Math.max(0,Math.min(layout.plotWidth-layout.width,layout.anchor+pose.x));
+    const dx=left-layout.left,dy=pose.y-layout.top;
+    if(Math.abs(dx)<.001&&Math.abs(dy)<.001)item.button.style.removeProperty('translate');
+    else item.button.style.translate=`${dx}px ${dy}px`;
+    const moving=Math.abs(pose.x-pose.targetX)>.05||Math.abs(pose.y-pose.targetY)>.05||Math.abs(pose.vx)>.1||Math.abs(pose.vy)>.1;
+    item.button.toggleAttribute('data-reflow',moving);
+    // The timeline end stays at the actual visit time; the other end follows
+    // the presented label. Never draw a detached line during a visit handoff.
+    item.link.style.visibility=layout.anchor>=left-.5&&layout.anchor<=left+layout.width+.5?'':'hidden';
+    item.link.setAttribute('d',layout.below
+      ?`M ${layout.anchor} 294 V 299 M ${layout.anchor} 344 V ${260+pose.y}`
+      :`M ${layout.anchor} ${pose.y+32+260} L ${layout.anchor} 252`);
+    return moving;
+  }
+  function finishTagMotion(){
+    cancelAnimationFrame(tagMotionFrame);tagMotionFrame=0;
+    for(const item of tagMap.values())if(item.pose){
+      item.pose.x=item.pose.targetX;item.pose.y=item.pose.targetY;item.pose.vx=item.pose.vy=0;
+      paintTagPose(item);
+    }
+  }
+  function startTagMotion(){
+    if(tagMotionFrame)return;
+    tagMotionTime=performance.now();
+    const frame=now=>{
+      tagMotionFrame=0;
+      const dt=Math.min(.04,Math.max(0,(now-tagMotionTime)/1000)),omega=26,decay=Math.exp(-omega*dt);
+      tagMotionTime=now;let moving=false;
+      for(const item of tagMap.values()){
+        const pose=item.pose;if(!pose||item.button.hidden)continue;
+        for(const [axis,target,speed] of [['x','targetX','vx'],['y','targetY','vy']]){
+          const delta=pose[axis]-pose[target],slope=pose[speed]+omega*delta;
+          pose[axis]=pose[target]+(delta+slope*dt)*decay;
+          pose[speed]=(pose[speed]-omega*slope*dt)*decay;
+          if(Math.abs(pose[axis]-pose[target])<.05&&Math.abs(pose[speed])<.1){pose[axis]=pose[target];pose[speed]=0;}
+        }
+        moving=paintTagPose(item)||moving;
+      }
+      if(moving)tagMotionFrame=requestAnimationFrame(frame);
+    };
+    tagMotionFrame=requestAnimationFrame(frame);
+  }
+  function placeTag(item,layout,animate){
+    const targetX=layout.left-layout.anchor,old=item.pose;
+    if(!animate||!item.wasVisible||!old||reduced.matches||document.hidden||tagMotionPaused){
+      item.pose={x:targetX,y:layout.top,vx:0,vy:0,targetX,targetY:layout.top,anchor:layout.anchor,session:layout.session};
+    }else{
+      // A later visit of the same URL can become its visible time anchor.
+      // Rebase from the current position rather than teleporting to that visit.
+      if(old.session!==layout.session)old.x+=old.anchor-layout.anchor;
+      else if(old.targetY===layout.top&&item.tagLayout?.before===layout.before&&item.tagLayout?.after===layout.after){
+        // The camera already moves continuously. Transport ordinary cell motion
+        // directly; only discrete reflow retains a spring offset to settle.
+        old.x+=targetX-old.targetX;
+      }
+      old.targetX=targetX;old.targetY=layout.top;old.anchor=layout.anchor;old.session=layout.session;
+    }
+    item.tagLayout=layout;item.button.style.left=layout.left+'px';item.button.style.top=layout.top+'px';
+    if(paintTagPose(item))startTagMotion();
+  }
+  function layoutTags(animate=false){
+    if(!animate)finishTagMotion();
     const width=$('#lanes').clientWidth,svg=$('#event-links'),more=$('#more-pages');
     const iconWidth=32,gap=6,overflowWidth=70;
     const rowPitch=iconWidth+10, firstRowTop=30+iconWidth;
     // In a widget, reserve space only for rows that fit above the ruler.
     const levels=embedded ? Math.max(1,Math.min(8,1+Math.floor(($('#scene').offsetTop-firstRowTop-12)/rowPitch))) : 8;
-    for(const item of tagMap.values()){item.button.hidden=true;item.link.style.display='none';item.anchor.style.display='none';}
+    for(const item of tagMap.values()){item.wasVisible=!item.button.hidden;item.button.hidden=true;item.link.style.display='none';item.anchor.style.display='none';}
     const entries=[];
     for(const page of pages){
       const item=tagMap.get(page.url),session=page.items.find(s=>s.b>camera.start&&s.a<camera.end);
       if(!item||!session)continue;
       const anchor=timePosition(Math.max(camera.start,session.a))/100*width;
-      entries.push({item,anchor,iconLeft:Math.max(0,Math.min(width-iconWidth,anchor-iconWidth/2))});
+      entries.push({item,anchor,session:session.id,iconLeft:Math.max(0,Math.min(width-iconWidth,anchor-iconWidth/2))});
       item.button.hidden=false;
     }
     // Measure natural width independently of the allocated label space.
     // Title length still never decides which icons fit.
-    if(entries.length)titleMeasure.font=getComputedStyle(entries[0].item.name).font;
-    for(const {item} of entries)if(item.textWidth==null)item.textWidth=Math.ceil(titleMeasure.measureText(item.name.textContent).width)+1;
+    const unmeasured=entries.filter(({item})=>item.textWidth==null);
+    // Labels keep a fixed font while zooming. Reading computed style after
+    // hiding/showing every tag would force a fresh layout on every frame.
+    if(unmeasured.length)titleMeasure.font=getComputedStyle(unmeasured[0].item.name).font;
+    for(const {item} of unmeasured)item.textWidth=Math.ceil(titleMeasure.measureText(item.name.textContent).width)+1;
     entries.sort((a,b)=>a.anchor-b.anchor||a.item.page.url.localeCompare(b.item.page.url));
     svg.setAttribute('viewBox',`0 0 ${width} 280`);svg.setAttribute('width',width);svg.setAttribute('height',280);
     function arrange(reserve){
-      const bands=Array.from({length:levels},()=>[]),hidden=[];
+      const bands=Array.from({length:levels},()=>[]),hidden=[],pending=[];
+      const valid=level=>Number.isInteger(level)&&level>=0&&level<levels;
+      function slot(entry,level){
+        const band=bands[level],limit=reserve&&level===0?Math.max(0,width-overflowWidth-gap):width;
+        let index=0;while(index<band.length&&band[index].iconLeft<=entry.iconLeft)index++;
+        if(entry.iconLeft<0||entry.iconLeft+iconWidth>limit)return -1;
+        if(index&&entry.iconLeft<band[index-1].iconLeft+iconWidth+gap)return -1;
+        if(index<band.length&&entry.iconLeft+iconWidth+gap>band[index].iconLeft)return -1;
+        return index;
+      }
+      const insert=(entry,level,index)=>bands[level].splice(index,0,{...entry,level});
+      // Reserve incumbents before admitting newly exposed pages. Otherwise an
+      // early-time overflow item can steal a moving label's row, then release it
+      // a few frames later, producing A -> B -> A during a single zoom gesture.
       for(const entry of entries){
-        const fits=level=>{
-          const band=bands[level],end=band.length?band.at(-1).iconLeft+iconWidth+gap:0;
-          const limit=reserve&&level===0?Math.max(0,width-overflowWidth-gap):width;
-          return entry.iconLeft>=end&&entry.iconLeft+iconWidth<=limit;
-        };
-        const preferred=entry.item.level;
-        const level=Number.isInteger(preferred)&&preferred<levels&&fits(preferred)?preferred:bands.findIndex((_,index)=>fits(index));
-        if(level<0){hidden.push(entry.item);continue;}
-        bands[level].push({...entry,level});
+        const level=entry.item.level,index=entry.item.wasVisible&&valid(level)?slot(entry,level):-1;
+        if(index>=0)insert(entry,level,index);else pending.push(entry);
+      }
+      for(const entry of pending){
+        const preferred=entry.item.level,order=Array.from({length:levels},(_,level)=>level);
+        if(valid(preferred))order.sort((a,b)=>Math.abs(a-preferred)-Math.abs(b-preferred)||a-b);
+        const level=order.find(level=>slot(entry,level)>=0);
+        if(level===undefined)hidden.push(entry.item);else insert(entry,level,slot(entry,level));
       }
       return {bands,hidden,reserve};
     }
     let result=arrange(false);if(result.hidden.length)result=arrange(true);
     const zoom=(rangeEnd-rangeStart)/(camera.end-camera.start);
-    const textCap=Math.min(480,72+68*Math.log2(Math.max(1,zoom)));
+    const logZoom=Math.log2(Math.max(1,zoom));
+    const overviewCap=78,textCap=Math.min(300,overviewCap+124*logZoom),growth=smoothLabel(logZoom/5);
     for(const [level,band] of result.bands.entries())for(const [index,entry] of band.entries()){
       const {item,anchor,iconLeft}=entry,previous=band[index-1],next=band[index+1];
       // Disjoint cells protect every icon. A label can borrow room to its left at
       // the viewport edge, but its contents always read icon, then title.
       const leftLimit=previous?(previous.iconLeft+iconWidth+iconLeft+gap)/2:0;
       const rightLimit=next?(iconLeft+iconWidth+next.iconLeft-gap)/2:result.reserve&&level===0?width-overflowWidth-gap:width;
-      let textWidth=Math.min(item.textWidth,textCap,Math.max(0,rightLimit-leftLimit-iconWidth-gap));
-      if(textWidth<Math.min(28,item.textWidth))textWidth=0;
-      const extra=textWidth>0?gap+textWidth:0,tagWidth=iconWidth+extra,left=Math.max(leftLimit,Math.min(iconLeft,rightLimit-tagWidth));
+      // Reveal within the existing icon-first cells, driven by the live camera.
+      // Text, gap and corners share one reversible progress; glyphs never scale.
+      const budget=Math.min(item.textWidth+gap,textCap,Math.max(0,rightLimit-leftLimit-iconWidth));
+      // Start with a readable short title whenever its cell has room. Zoom
+      // progressively reveals more; text still cannot displace another icon.
+      const baseline=Math.min(overviewCap,budget),extra=baseline+(budget-baseline)*growth;
+      const reveal=smoothLabel(extra/80),titleGap=gap*reveal;
+      const textWidth=Math.max(0,extra-titleGap);
+      const fadeSpan=Math.max(1,Math.min(64,item.textWidth*.8));
+      const opacity=smoothLabel((extra-3)/fadeSpan),radius=iconWidth/2-6*reveal;
+      const tagWidth=iconWidth+extra,left=Math.max(leftLimit,Math.min(iconLeft,rightLimit-tagWidth));
       item.level=level;item.button.hidden=false;item.link.style.display='';item.anchor.style.display='';
-      item.button.style.left=left+'px';
-      item.button.style.setProperty('--tag-width',tagWidth+'px');item.button.style.setProperty('--title-width',textWidth+'px');item.button.style.setProperty('--title-gap',textWidth>0?gap+'px':'0px');
+      entry.left=left;entry.width=tagWidth;
+      entry.before=previous?JSON.stringify([previous.item.page.url,previous.session]):null;
+      entry.after=next?JSON.stringify([next.item.page.url,next.session]):result.reserve&&level===0?'overflow-edge':null;
+      item.button.style.setProperty('--tag-width',tagWidth+'px');item.button.style.setProperty('--title-width',textWidth+'px');item.button.style.setProperty('--title-gap',titleGap+'px');
+      item.button.style.setProperty('--title-opacity',opacity);item.button.style.setProperty('--tag-radius',radius+'px');
       item.button.classList.toggle('icon-only',textWidth===0);
       item.button.dataset.labelMode=textWidth===0?'icon':textWidth+.5>=item.textWidth?'full':'short';
       item.anchor.setAttribute('cx',anchor);
@@ -367,14 +461,10 @@
       const below=splitLabels&&level%2===1;
       const row=splitLabels?Math.floor(level/2):level;
       const top=below?96+row*rowPitch:-firstRowTop-row*rowPitch;
-      for(const {item,anchor} of band){
+      for(const {item,anchor,left,width:tagWidth,session,before,after} of band){
         highest=Math.min(highest,top);
-        item.button.style.top=top+'px';
         item.anchor.setAttribute('cy',below?'294':'252');
-        // Leave the tick labels clear where a lower connector crosses the ruler.
-        item.link.setAttribute('d',below
-          ?`M ${anchor} 294 V 299 M ${anchor} 344 V ${260+top}`
-          :`M ${anchor} ${top+iconWidth+260} L ${anchor} 252`);
+        placeTag(item,{left,top,width:tagWidth,plotWidth:width,anchor,session,below,before,after},animate);
       }
     }
     if(splitLabels){
@@ -383,6 +473,7 @@
     }
     $('#canvas').style.setProperty('--tag-space',Math.max(0,24-highest)+'px');
     for(const item of result.hidden){item.button.hidden=true;item.link.style.display='none';item.anchor.style.display='none';}
+    for(const item of tagMap.values())if(item.button.hidden){item.pose=null;item.button.style.removeProperty('translate');item.button.removeAttribute('data-reflow');}
     hiddenPages=result.hidden.map(item=>item.page);
     more.hidden=!result.hidden.length;more.textContent='+'+result.hidden.length;more.title=`查看其余 ${result.hidden.length} 个网页`;
     more.setAttribute('aria-label',`查看其余 ${result.hidden.length} 个网页`);more.style.top='-62px';more.style.right='0';
@@ -397,7 +488,7 @@
       block.parentNode.style.setProperty('--visit-x',timePosition((s.a+s.b)/2)+'%');
     }
   }
-  function stopNavigation(){cancelAnimationFrame(camera.frame);camera.frame=0;camera.velocityStart=camera.velocityEnd=0;}
+  function stopNavigation(){cancelAnimationFrame(camera.frame);camera.frame=0;camera.velocityStart=camera.velocityEnd=0;camera.lockAt=null;wheelZoomTarget=null;}
   function hourInstant(value) {
     const day = localDate(date);
     return day.setMinutes(value);
@@ -458,8 +549,8 @@
       room?.setMinute(roomMinute);
     }
   }
-  function paintNavigation(){
-    renderTicks();for(const row of laneMap.values())for(const b of row.blocks.values())positionBlock(b);layoutTags();
+  function paintNavigation(animateTags=true){
+    renderTicks();for(const row of laneMap.values())for(const b of row.blocks.values())positionBlock(b);layoutTags(animateTags);
     $('#tooltip').hidden=true;paintTimeProbe();
     if(returningTo&&!camera.frame){
       const {start,end,opener}=returningTo;
@@ -469,7 +560,9 @@
       }
     }
   }
-  function animateCamera(start,end,velocity=0){
+  function animateCamera(start,end,velocity=0,{lockAt=null,wheel=false}={}){
+    if(!wheel)wheelZoomTarget=null;
+    camera.lockAt=lockAt;
     [camera.targetStart,camera.targetEnd]=clampWindow(start,end);
     if (isFullDay(camera.targetStart, camera.targetEnd)) {
       resetHourDial(720);
@@ -479,15 +572,15 @@
     // A running spring may be retargeted. Only the viewport moves during a return to noon.
     function applyFrame(a, b) {
       if (isFullDay(camera.targetStart, camera.targetEnd)) moveCameraWindow(a, b, true);
-      else updateCamera(a, b);
+      else updateCamera(a, b, true, camera.lockAt);
     }
     if(reduced.matches || (camera.start===camera.targetStart && camera.end===camera.targetEnd)){
-      stopNavigation();applyFrame(camera.targetStart,camera.targetEnd);return;
+      applyFrame(camera.targetStart,camera.targetEnd);stopNavigation();return;
     }
     if(velocity)camera.velocityStart=camera.velocityEnd=velocity;
     if(camera.frame)return;camera.last=performance.now();
     const frame=now=>{
-      const dt=Math.min(.04,(now-camera.last)/1000),omega=18,e=Math.exp(-omega*dt);camera.last=now;
+      const dt=Math.min(.04,(now-camera.last)/1000),omega=wheelZoomTarget?28:18,e=Math.exp(-omega*dt);camera.last=now;
       const next=[];
       for(const [value,target,velocityKey] of [['start','targetStart','velocityStart'],['end','targetEnd','velocityEnd']]){
         const delta=camera[value]-camera[target],c=camera[velocityKey]+omega*delta;
@@ -506,13 +599,26 @@
     const change = event.deltaY * wheelUnit(event) * (event.ctrlKey ? .008 : .002);
     return Math.exp(Math.max(-.65, Math.min(.65, change)));
   }
-  function zoomCamera(factor, {anchor = .5, animate = false, dialInstant = null} = {}) {
+  function zoomCamera(factor, {anchor = .5, animate = false, dialInstant = null, wheel = false} = {}) {
     const oldSpan = camera.end - camera.start;
     const daySpan = rangeEnd - rangeStart;
-    const newSpan = Math.max(MIN_SPAN, Math.min(daySpan, oldSpan * factor));
+    const source = dialInstant === null ? 'axis' : 'dial';
+    const continuing = wheel && camera.frame && wheelZoomTarget?.source === source;
+    // Accumulate notches against the destination, while anchoring to the time
+    // actually under the pointer. Reading the lagging span would lose input.
+    const baseSpan = continuing ? wheelZoomTarget.span : oldSpan;
+    const newSpan = Math.max(MIN_SPAN, Math.min(daySpan, baseSpan * factor));
     const instant = dialInstant ?? (camera.start + anchor * oldSpan);
     const start = instant - anchor * newSpan;
-    if (animate) {
+    if (wheel) {
+      if (!continuing) stopNavigation();
+      const spanVelocity = camera.velocityEnd - camera.velocityStart;
+      // Keep the anchor stationary even when the pointer moves mid-gesture.
+      camera.velocityStart = -anchor * spanVelocity;
+      camera.velocityEnd = (1 - anchor) * spanVelocity;
+      wheelZoomTarget = {span: newSpan, source};
+      animateCamera(start, start + newSpan, 0, {lockAt: newSpan < daySpan ? dialInstant : null,wheel:true});
+    } else if (animate) {
       animateCamera(start, start + newSpan);
     } else {
       stopNavigation();
@@ -792,12 +898,13 @@
     };
     toggle.onpointercancel=()=>{drag=null;$('#scene').classList.remove('dragging');};
     toggle.addEventListener('wheel',e=>{
-      e.preventDefault();if(!filtered.length)return;stopNavigation();if(navigator.userActivation?.hasBeenActive)dial.unlock();
+      e.preventDefault();if(!filtered.length)return;if(navigator.userActivation?.hasBeenActive)dial.unlock();
       if(!e.ctrlKey&&(e.shiftKey||Math.abs(e.deltaX)>Math.abs(e.deltaY))){
+        stopNavigation();
         const pixels=(e.shiftKey&&Math.abs(e.deltaY)>Math.abs(e.deltaX)?e.deltaY:e.deltaX)*wheelUnit(e),delta=pixels/$('#lanes').clientWidth*(camera.end-camera.start);updateCamera(camera.start+delta,camera.end+delta);
       }else{
         const rect=$('#lanes').getBoundingClientRect(),anchor=Math.max(0,Math.min(1,(e.clientX-rect.x)/rect.width));
-        zoomCamera(wheelZoomFactor(e), {anchor});
+        zoomCamera(wheelZoomFactor(e), {anchor,wheel:true});
       }
     },{passive:false});
     toggle.onkeydown=e=>{
@@ -831,13 +938,13 @@
     $('#settings-button').onclick=showSettings;$('#close-dialog').onclick=()=>$('#settings-dialog').close();$('#close-inspector').onclick=closeDetail;$('#empty-start').onclick=toggleRecording;
     $('#import-input').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{if(file.size>20*1024*1024)throw Error('文件不能超过 20 MB。');const next=validate(JSON.parse(await file.text()));resetNavigation();data=next;mode='import';date=latestDate(next);closeDetail();$('#settings-dialog').close();render();toast(`已打开 ${next.sessions.length} 段记录。`);}catch(error){toast('无法打开：'+error.message);}finally{e.target.value='';}};
     document.addEventListener('keydown',e=>{if(document.querySelector('dialog[open]'))return;if(e.key==='Escape'){if(selected)closeDetail();else if(!$('#overflow-list').hidden)closeOverflow(true);$('#tooltip').hidden=true;}if(e.target.closest('input,button,a,#timeline-nav,#overflow-list')||e.ctrlKey||e.metaKey||e.altKey)return;if(e.key==='ArrowLeft'){e.preventDefault();setDate(shift(date,-1));}if(e.key==='ArrowRight'&&date<today()){e.preventDefault();setDate(shift(date,1));}});
-    addEventListener('scroll',()=>{paintSticky();if(!$('#overflow-list').hidden)positionOverflow();},{passive:true});addEventListener('resize',()=>{closeOverflow();paintNavigation();paintSticky();});reduced.addEventListener('change',()=>{if(reduced.matches){runSpring(detail,paintDetail);if(camera.frame){const a=camera.targetStart,b=camera.targetEnd;stopNavigation();updateCamera(a,b,false);}}});
+    addEventListener('scroll',()=>{paintSticky();if(!$('#overflow-list').hidden)positionOverflow();},{passive:true});addEventListener('resize',()=>{closeOverflow();paintNavigation(false);paintSticky();});addEventListener('blur',()=>{tagMotionPaused=true;finishTagMotion();});addEventListener('focus',()=>{tagMotionPaused=false;});reduced.addEventListener('change',()=>{if(reduced.matches){finishTagMotion();runSpring(detail,paintDetail);if(camera.frame){const a=camera.targetStart,b=camera.targetEnd,lockAt=camera.lockAt;stopNavigation();updateCamera(a,b,false,lockAt);}}});
     document.addEventListener('visibilitychange',()=>{
       if (!document.hidden) { refresh(); return; }
       if (camera.frame && isFullDay(camera.targetStart, camera.targetEnd)) {
         moveCameraWindow(rangeStart, rangeEnd, false);
       }
-      stopNavigation();dateControl?.close();closeOverflow();drag=null;hideTimeProbe();$('#scene').classList.remove('dragging');
+      stopNavigation();finishTagMotion();dateControl?.close();closeOverflow();drag=null;hideTimeProbe();$('#scene').classList.remove('dragging');
     });setInterval(()=>{if(!document.hidden)refresh();},30000);
   }
   window.traceSnapshot=()=>({ready:!!date,mode,date,range:[...view],viewport:[camera.start,camera.end],bounds:[rangeStart,rangeEnd],zoom:(rangeEnd-rangeStart)/(camera.end-camera.start),segments:filtered.length,pages:pages.length,sites:new Set(filtered.map(s=>s.host)).size,activeMs:sumUnion(filtered),recording:liveRecorder.recording,status:liveRecorder.status,drawer:detail.p,allSessions:data.sessions.length,overflowPages:hiddenPages.length,overflowOpen:!$('#overflow-list').hidden,dateCapsule:dateControl?.snapshot(),dateMotion:dateMotion?.snapshot()});
