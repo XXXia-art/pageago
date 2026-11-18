@@ -8,6 +8,10 @@
 <p align="center">Find the pages you visited, and when.</p>
 
 <p align="center">
+  <a href="https://github.com/XXXia-art/pageago/stargazers"><img src="https://img.shields.io/github/stars/XXXia-art/pageago?style=social" alt="PageAgo GitHub star count"></a>
+</p>
+
+<p align="center">
   <a href="#installation">Installation</a>
   &nbsp; · &nbsp; <a href="README.md">简体中文</a>
 </p>

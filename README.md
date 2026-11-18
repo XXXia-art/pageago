@@ -8,6 +8,10 @@
 <p align="center">在时间轴上，找回你看过的网页。</p>
 
 <p align="center">
+  <a href="https://github.com/XXXia-art/pageago/stargazers"><img src="https://img.shields.io/github/stars/XXXia-art/pageago?style=social" alt="PageAgo 的 GitHub Star 数量"></a>
+</p>
+
+<p align="center">
   <a href="#安装指南">安装指南</a> · <a href="README.en.md">English</a>
 </p>
 
