@@ -9,10 +9,11 @@
 
 <p align="center">
   <a href="https://github.com/XXXia-art/pageago/stargazers"><img src="https://img.shields.io/github/stars/XXXia-art/pageago?style=social" alt="PageAgo 的 GitHub Star 数量"></a>
+  <a href="https://github.com/XXXia-art/pageago/issues?q=is%3Aissue%20is%3Aopen%20label%3Atheme-submission"><img src="https://img.shields.io/github/issues-raw/XXXia-art/pageago/theme-submission?style=social&amp;label=%E4%B8%BB%E9%A2%98%E6%8A%95%E7%A8%BF" alt="当前开放的主题投稿数"></a>
 </p>
 
 <p align="center">
-  <a href="#安装指南">安装指南</a> · <a href="README.en.md">English</a>
+  <a href="#安装指南">安装指南</a> · <a href="https://github.com/XXXia-art/pageago/issues/new?template=theme-submission.yml">投稿主题</a> · <a href="README.en.md">English</a>
 </p>
 
 ![PageAgo 交互演示：缩放、滑动、重置、搜索与日期切换。记录均为合成数据。](docs/media/pageago-interactions.gif)

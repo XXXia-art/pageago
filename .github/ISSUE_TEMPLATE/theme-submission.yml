@@ -1,0 +1,16 @@
+name: 主题投稿 · Submit a theme
+description: 分享你的 PageAgo 主题设计。Share your PageAgo theme.
+labels: ["theme-submission"]
+body:
+  - type: textarea
+    id: preview
+    attributes:
+      label: 主题预览 · Theme preview
+      description: 请用主题名称作标题，在这里拖入截图或粘贴演示链接。请使用示例浏览记录。Use the theme name as the title and share a screenshot or demo with sample browsing data.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: 作品链接（选填）· Source link (optional)
+      placeholder: https://github.com/…

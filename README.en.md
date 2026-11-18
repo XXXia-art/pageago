@@ -9,10 +9,12 @@
 
 <p align="center">
   <a href="https://github.com/XXXia-art/pageago/stargazers"><img src="https://img.shields.io/github/stars/XXXia-art/pageago?style=social" alt="PageAgo GitHub star count"></a>
+  <a href="https://github.com/XXXia-art/pageago/issues?q=is%3Aissue%20is%3Aopen%20label%3Atheme-submission"><img src="https://img.shields.io/github/issues-raw/XXXia-art/pageago/theme-submission?style=social&amp;label=Theme%20submissions" alt="Open theme submissions"></a>
 </p>
 
 <p align="center">
   <a href="#installation">Installation</a>
+  &nbsp; · &nbsp; <a href="https://github.com/XXXia-art/pageago/issues/new?template=theme-submission.yml">Submit a theme</a>
   &nbsp; · &nbsp; <a href="README.md">简体中文</a>
 </p>
 
